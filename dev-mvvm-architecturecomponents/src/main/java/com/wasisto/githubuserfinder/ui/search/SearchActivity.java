@@ -22,15 +22,23 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
+import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl;
+import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
+import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
 
@@ -63,8 +71,28 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_user);
 
-        viewModel = ViewModelProviders.of(this, new SearchViewModelFactory(this))
-                .get(SearchViewModel.class);
+        viewModel =
+                ViewModelProviders.of(
+                        this,
+                        new ViewModelProvider.Factory() {
+                            @NonNull
+                            @Override
+                            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                                // noinspection unchecked
+                                return (T) new SearchViewModel(
+                                        new SearchUseCase(
+                                                GithubDataSourceImpl.getInstance(SearchActivity.this),
+                                                SearchHistoryDataSourceImpl.getInstance(SearchActivity.this),
+                                                LoggingHelperImpl.getInstance()
+                                        ),
+                                        new GetHistoryUseCase(
+                                                SearchHistoryDataSourceImpl.getInstance(SearchActivity.this)
+                                        ),
+                                        LoggingHelperImpl.getInstance()
+                                );
+                            }
+                        }
+                ).get(SearchViewModel.class);
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         queryEditText = findViewById(R.id.queryEditText);

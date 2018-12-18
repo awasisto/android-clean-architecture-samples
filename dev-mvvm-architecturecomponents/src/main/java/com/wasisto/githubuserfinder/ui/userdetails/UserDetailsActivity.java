@@ -25,6 +25,7 @@ package com.wasisto.githubuserfinder.ui.userdetails;
 import android.arch.lifecycle.*;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -33,6 +34,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
+import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import static android.content.Intent.ACTION_VIEW;
 import static android.view.View.GONE;
@@ -66,8 +70,24 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         String username = getIntent().getStringExtra(EXTRA_USERNAME);
 
-        viewModel = ViewModelProviders.of(this, new UserDetailsViewModelFactory(username, this))
-                .get(UserDetailsViewModel.class);
+        viewModel =
+                ViewModelProviders.of(
+                        this,
+                        new ViewModelProvider.Factory() {
+                            @NonNull
+                            @Override
+                            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                                // noinspection unchecked
+                                return (T) new UserDetailsViewModel(
+                                        username,
+                                        new GetUserUseCase(
+                                                GithubDataSourceImpl.getInstance(UserDetailsActivity.this)
+                                        ),
+                                        LoggingHelperImpl.getInstance()
+                                );
+                            }
+                        }
+                ).get(UserDetailsViewModel.class);
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         avatarImageView = findViewById(R.id.avatarImageView);
