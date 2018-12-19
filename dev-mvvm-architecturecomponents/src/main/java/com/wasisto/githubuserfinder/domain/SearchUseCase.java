@@ -22,14 +22,18 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-public class SearchUseCase implements UseCase<String, SearchUserResult> {
+import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
+import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+
+public class SearchUseCase implements UseCase<String, Resource<SearchUserResult>> {
 
     private static final String TAG = "SearchUseCase";
 
@@ -47,22 +51,21 @@ public class SearchUseCase implements UseCase<String, SearchUserResult> {
     }
 
     @Override
-    public void execute(String query, Callback<SearchUserResult> callback) {
+    public LiveData<Resource<SearchUserResult>> execute(String query) {
         SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
         searchHistoryItem.setQuery(query);
 
-        searchHistoryDataSource.add(searchHistoryItem, new Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                loggingHelper.info(TAG, "Query added to the search history");
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
+        searchHistoryDataSource.add(searchHistoryItem).observeForever(resource -> {
+            if (resource != null) {
+                if (resource.status == SUCCESS) {
+                    loggingHelper.info(TAG, "Query added to the search history");
+                } else if (resource.status == ERROR) {
+                    loggingHelper.warn(TAG, "An error occurred while adding a query to the " +
+                            "search history", resource.error);
+                }
             }
         });
 
-        githubDataSource.searchUser(query, callback);
+        return githubDataSource.searchUser(query);
     }
 }

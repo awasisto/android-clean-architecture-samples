@@ -35,15 +35,22 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
+import com.wasisto.githubuserfinder.data.github.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import static android.content.Intent.ACTION_VIEW;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
+import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
+import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
 
 public class UserDetailsActivity extends AppCompatActivity {
+
+    private static final String TAG = "UserDetailsActivity";
 
     public static final String EXTRA_USERNAME = "username";
 
@@ -62,6 +69,8 @@ public class UserDetailsActivity extends AppCompatActivity {
     private TextView locationTextView;
 
     private TextView blogTextView;
+
+    private LoggingHelper loggingHelper = LoggingHelperImpl.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +91,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                                         username,
                                         new GetUserUseCase(
                                                 GithubDataSourceImpl.getInstance(UserDetailsActivity.this)
-                                        ),
-                                        LoggingHelperImpl.getInstance()
+                                        )
                                 );
                             }
                         }
@@ -97,46 +105,51 @@ public class UserDetailsActivity extends AppCompatActivity {
         locationTextView = findViewById(R.id.locationTextView);
         blogTextView = findViewById(R.id.blogTextView);
 
-        loadingIndicator.setVisibility(VISIBLE);
 
-        avatarImageView.setVisibility(GONE);
-        nameTextView.setVisibility(GONE);
-        usernameTextView.setVisibility(GONE);
-        companyTextView.setVisibility(GONE);
-        locationTextView.setVisibility(GONE);
-        blogTextView.setVisibility(GONE);
+        viewModel.getUser().observe(this, resource -> {
+            if (resource != null) {
+                if (resource.status == LOADING) {
+                    loadingIndicator.setVisibility(VISIBLE);
 
-        viewModel.getUser().observe(this, user -> {
-            if (user != null) {
-                loadingIndicator.setVisibility(GONE);
+                    avatarImageView.setVisibility(GONE);
+                    nameTextView.setVisibility(GONE);
+                    usernameTextView.setVisibility(GONE);
+                    companyTextView.setVisibility(GONE);
+                    locationTextView.setVisibility(GONE);
+                    blogTextView.setVisibility(GONE);
+                } else {
+                    loadingIndicator.setVisibility(GONE);
 
-                avatarImageView.setVisibility(VISIBLE);
-                nameTextView.setVisibility(VISIBLE);
-                usernameTextView.setVisibility(VISIBLE);
-                companyTextView.setVisibility(VISIBLE);
-                locationTextView.setVisibility(VISIBLE);
-                blogTextView.setVisibility(VISIBLE);
+                    avatarImageView.setVisibility(VISIBLE);
+                    nameTextView.setVisibility(VISIBLE);
+                    usernameTextView.setVisibility(VISIBLE);
+                    companyTextView.setVisibility(VISIBLE);
+                    locationTextView.setVisibility(VISIBLE);
+                    blogTextView.setVisibility(VISIBLE);
 
-                Picasso.get().load(user.getAvatarUrl()).placeholder(R.color.colorAccent).into(avatarImageView);
-                nameTextView.setText(user.getName());
-                usernameTextView.setText(user.getLogin());
-                companyTextView.setText(user.getCompany());
-                locationTextView.setText(user.getLocation());
-                blogTextView.setText(user.getBlog());
-                
-                blogTextView.setOnClickListener(v -> {
-                    Intent intent = new Intent(ACTION_VIEW);
-                    intent.setData(Uri.parse(user.getBlog()));
+                    if (resource.status == SUCCESS) {
+                        User user = resource.data;
 
-                    startActivity(intent);
-                });
-            }
-        });
+                        Picasso.get().load(user.getAvatarUrl()).placeholder(R.color.colorAccent).into(avatarImageView);
+                        nameTextView.setText(user.getName());
+                        usernameTextView.setText(user.getLogin());
+                        companyTextView.setText(user.getCompany());
+                        locationTextView.setText(user.getLocation());
+                        blogTextView.setText(user.getBlog());
 
-        viewModel.getErrorMessageEvent().observe(this, errorMessageEvent -> {
-            if (errorMessageEvent != null) {
-                Toast.makeText(this, errorMessageEvent.getData(), LENGTH_SHORT).show();
-                finish();
+                        blogTextView.setOnClickListener(v -> {
+                            Intent intent = new Intent(ACTION_VIEW);
+                            intent.setData(Uri.parse(user.getBlog()));
+
+                            startActivity(intent);
+                        });
+                    } else if (resource.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
+
+                        Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
             }
         });
     }

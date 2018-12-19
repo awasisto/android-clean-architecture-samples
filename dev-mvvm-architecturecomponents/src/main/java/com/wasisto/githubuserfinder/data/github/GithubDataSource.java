@@ -22,13 +22,14 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.github.model.User;
 
 public interface GithubDataSource {
 
-    void searchUser(String query, Callback<SearchUserResult> callback);
+    LiveData<Resource<SearchUserResult>> searchUser(String query);
 
-    void getUser(String username, Callback<User> callback);
+    LiveData<Resource<User>> getUser(String username);
 }

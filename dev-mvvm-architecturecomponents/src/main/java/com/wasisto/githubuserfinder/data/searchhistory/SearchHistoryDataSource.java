@@ -22,14 +22,15 @@
 
 package com.wasisto.githubuserfinder.data.searchhistory;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 
 import java.util.List;
 
 public interface SearchHistoryDataSource {
 
-    void getAll(Callback<List<SearchHistoryItem>> callback);
+    LiveData<Resource<List<SearchHistoryItem>>> getAll();
 
-    void add(SearchHistoryItem searchHistoryItem, Callback<Void> callback);
+    LiveData<Resource<Void>> add(SearchHistoryItem searchHistoryItem);
 }

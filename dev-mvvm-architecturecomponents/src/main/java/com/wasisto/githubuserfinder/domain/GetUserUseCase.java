@@ -22,11 +22,12 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.data.github.model.User;
 
-public class GetUserUseCase implements UseCase<String, User> {
+public class GetUserUseCase implements UseCase<String, Resource<User>> {
 
     private GithubDataSource githubDataSource;
 
@@ -35,7 +36,7 @@ public class GetUserUseCase implements UseCase<String, User> {
     }
 
     @Override
-    public void execute(String username, Callback<User> callback) {
-        githubDataSource.getUser(username, callback);
+    public LiveData<Resource<User>> execute(String username) {
+        return githubDataSource.getUser(username);
     }
 }

@@ -22,6 +22,8 @@
 
 package com.wasisto.githubuserfinder.data.searchhistory;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,7 +36,7 @@ import java.util.concurrent.Executors;
 
 import android.os.Handler;
 import android.os.Looper;
-import com.wasisto.githubuserfinder.Callback;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 
@@ -49,7 +51,7 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
     private Executor executor = Executors.newSingleThreadExecutor();
 
     private Handler handler = new Handler(Looper.getMainLooper());
-    
+
     private SearchHistoryDataSourceImpl(Context context) {
         dbHelper = new SearchHistoryDbHelper(context);
     }
@@ -64,7 +66,11 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
 
 
     @Override
-    public void getAll(Callback<List<SearchHistoryItem>> callback) {
+    public LiveData<Resource<List<SearchHistoryItem>>> getAll() {
+        MutableLiveData<Resource<List<SearchHistoryItem>>> liveData = new MutableLiveData<>();
+
+        liveData.setValue(Resource.loading());
+
         executor.execute(() -> {
             try {
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -93,15 +99,19 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
 
                 cursor.close();
 
-                handler.post(() -> callback.onSuccess(searchHistory));
+                handler.post(() -> liveData.setValue(Resource.success(searchHistory)));
             } catch (Throwable t) {
-                handler.post(() -> callback.onError(t));
+                handler.post(() -> liveData.setValue(Resource.error(t)));
             }
         });
+
+        return liveData;
     }
 
     @Override
-    public void add(SearchHistoryItem searchHistoryItem, Callback<Void> callback) {
+    public LiveData<Resource<Void>> add(SearchHistoryItem searchHistoryItem) {
+        MutableLiveData<Resource<Void>> liveData = new MutableLiveData<>();
+
         executor.execute(() -> {
             try {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -112,10 +122,12 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
                 db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
                         CONFLICT_REPLACE);
 
-                handler.post(() -> callback.onSuccess(null));
+                handler.post(() -> liveData.setValue(Resource.success(null)));
             } catch (Throwable t) {
-                handler.post(() -> callback.onError(t));
+                handler.post(() -> liveData.setValue(Resource.error(t)));
             }
         });
+
+        return liveData;
     }
 }

@@ -22,58 +22,21 @@
 
 package com.wasisto.githubuserfinder.ui.userdetails;
 
-import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
-import com.wasisto.githubuserfinder.Callback;
-import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
-import com.wasisto.githubuserfinder.ui.Event;
-import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 public class UserDetailsViewModel extends ViewModel {
 
-    private static final String TAG = "UserDetailsViewModel";
+    private LiveData<Resource<User>> user;
 
-    private MutableLiveData<User> user = new MutableLiveData<>();
-
-    private MutableLiveData<Event<Integer>> errorMessageEvent = new MutableLiveData<>();
-
-    private String username;
-
-    private GetUserUseCase getUserUseCase;
-
-    private LoggingHelper loggingHelper;
-
-    public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
-        this.username = username;
-        this.getUserUseCase = getUserUseCase;
-        this.loggingHelper = loggingHelper;
-
-        this.getUserUseCase.execute(this.username, new Callback<User>() {
-            @Override
-            public void onSuccess(User user) {
-                UserDetailsViewModel.this.user.setValue(user);
-            }
-
-            @Override
-            public void onError(Throwable error) {
-                UserDetailsViewModel.this.loggingHelper.error(TAG, "An error occurred while getting a user",
-                        error);
-
-                Event<Integer> errorEvent = new Event<>();
-                errorEvent.setData(R.string.an_error_occurred);
-
-                UserDetailsViewModel.this.errorMessageEvent.setValue(errorEvent);
-            }
-        });
+    public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase) {
+        user = getUserUseCase.execute(username);
     }
 
-    public MutableLiveData<User> getUser() {
+    public LiveData<Resource<User>> getUser() {
         return user;
-    }
-
-    public MutableLiveData<Event<Integer>> getErrorMessageEvent() {
-        return errorMessageEvent;
     }
 }

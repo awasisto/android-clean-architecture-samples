@@ -22,9 +22,9 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
 
 public interface UseCase<Params, Result> {
 
-    void execute(Params params, Callback<Result> callback);
+    LiveData<Result> execute(Params params);
 }

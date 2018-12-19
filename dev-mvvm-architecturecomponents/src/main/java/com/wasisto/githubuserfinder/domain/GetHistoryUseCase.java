@@ -22,13 +22,14 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
+import android.arch.lifecycle.LiveData;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 
 import java.util.List;
 
-public class GetHistoryUseCase implements UseCase<Void, List<SearchHistoryItem>> {
+public class GetHistoryUseCase implements UseCase<Void, Resource<List<SearchHistoryItem>>> {
 
     private SearchHistoryDataSource searchHistoryDataSource;
 
@@ -37,7 +38,7 @@ public class GetHistoryUseCase implements UseCase<Void, List<SearchHistoryItem>>
     }
 
     @Override
-    public void execute(Void params, Callback<List<SearchHistoryItem>> callback) {
-        searchHistoryDataSource.getAll(callback);
+    public LiveData<Resource<List<SearchHistoryItem>>> execute(Void params) {
+        return searchHistoryDataSource.getAll();
     }
 }

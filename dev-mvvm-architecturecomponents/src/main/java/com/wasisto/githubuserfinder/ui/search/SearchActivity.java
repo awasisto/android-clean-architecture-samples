@@ -34,19 +34,27 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
+import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
+import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
+import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
+import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
 
 public class SearchActivity extends AppCompatActivity {
+
+    private static final String TAG = "SearchActivity";
 
     private SearchViewModel viewModel;
 
@@ -65,6 +73,8 @@ public class SearchActivity extends AppCompatActivity {
     private HistoryAdapter historyAdapter;
 
     private ResultAdapter resultAdapter;
+
+    private LoggingHelper loggingHelper = LoggingHelperImpl.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +97,7 @@ public class SearchActivity extends AppCompatActivity {
                                         ),
                                         new GetHistoryUseCase(
                                                 SearchHistoryDataSourceImpl.getInstance(SearchActivity.this)
-                                        ),
-                                        LoggingHelperImpl.getInstance()
+                                        )
                                 );
                             }
                         }
@@ -102,13 +111,7 @@ public class SearchActivity extends AppCompatActivity {
         noResultsTextView = findViewById(R.id.noResultsTextView);
 
         historyAdapter = new HistoryAdapter(new ArrayList<>());
-        historyAdapter.setOnItemClickListener(historyItem -> {
-            queryEditText.setText(historyItem.getQuery());
-            loadingIndicator.setVisibility(VISIBLE);
-            historyRecyclerView.setVisibility(GONE);
-
-            viewModel.onSearch(historyItem.getQuery());
-        });
+        historyAdapter.setOnItemClickListener(historyItem -> viewModel.onSearch(historyItem.getQuery()));
 
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         historyRecyclerView.setAdapter(historyAdapter);
@@ -124,48 +127,58 @@ public class SearchActivity extends AppCompatActivity {
         resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         resultRecyclerView.setAdapter(resultAdapter);
 
-        searchButton.setOnClickListener(v -> {
-            loadingIndicator.setVisibility(VISIBLE);
-            resultRecyclerView.setVisibility(GONE);
-            historyRecyclerView.setVisibility(GONE);
-            noResultsTextView.setVisibility(GONE);
+        searchButton.setOnClickListener(v -> viewModel.onSearch(queryEditText.getText().toString()));
 
-            viewModel.onSearch(queryEditText.getText().toString());
-        });
-
-        loadingIndicator.setVisibility(VISIBLE);
-        resultRecyclerView.setVisibility(GONE);
-        historyRecyclerView.setVisibility(GONE);
-        noResultsTextView.setVisibility(GONE);
-
-        viewModel.getHistory().observe(this, searchHistoryItems -> {
-            if (searchHistoryItems != null) {
-                loadingIndicator.setVisibility(GONE);
-                historyRecyclerView.setVisibility(VISIBLE);
-
-                historyAdapter.setData(searchHistoryItems);
-                historyAdapter.notifyDataSetChanged();
-            }
-        });
-
-        viewModel.getResult().observe(this, result -> {
-            if (result != null) {
-                loadingIndicator.setVisibility(GONE);
-
-                if (!result.getItems().isEmpty()) {
-                    resultRecyclerView.setVisibility(VISIBLE);
-
-                    resultAdapter.setData(result.getItems());
-                    resultAdapter.notifyDataSetChanged();
+        viewModel.getHistory().observe(this, resource -> {
+            if (resource != null) {
+                if (resource.status == LOADING) {
+                    loadingIndicator.setVisibility(VISIBLE);
+                    resultRecyclerView.setVisibility(GONE);
+                    historyRecyclerView.setVisibility(GONE);
+                    noResultsTextView.setVisibility(GONE);
                 } else {
-                    noResultsTextView.setVisibility(VISIBLE);
+                    loadingIndicator.setVisibility(GONE);
+
+                    if (resource.status == SUCCESS) {
+                        historyRecyclerView.setVisibility(VISIBLE);
+                        historyAdapter.setData(resource.data);
+                        historyAdapter.notifyDataSetChanged();
+                    } else if (resource.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting the search " +
+                                "user history", resource.error);
+
+                        Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
+                    }
                 }
             }
         });
 
-        viewModel.getErrorMessageEvent().observe(this, errorMessageEvent -> {
-            if (errorMessageEvent != null) {
-                Toast.makeText(this, errorMessageEvent.getData(), LENGTH_SHORT).show();
+        viewModel.getResult().observe(this, resource -> {
+            if (resource != null) {
+                if (resource.status == LOADING) {
+                    loadingIndicator.setVisibility(VISIBLE);
+                    resultRecyclerView.setVisibility(GONE);
+                    historyRecyclerView.setVisibility(GONE);
+                    noResultsTextView.setVisibility(GONE);
+                } else {
+                    loadingIndicator.setVisibility(GONE);
+
+                    if (resource.status == SUCCESS) {
+                        List<SearchUserResult.Item> resultItems = resource.data.getItems();
+                        if (!resultItems.isEmpty()) {
+                            resultRecyclerView.setVisibility(VISIBLE);
+
+                            resultAdapter.setData(resultItems);
+                            resultAdapter.notifyDataSetChanged();
+                        } else {
+                            noResultsTextView.setVisibility(VISIBLE);
+                        }
+                    } else if (resource.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while searching users", resource.error);
+
+                        Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
+                    }
+                }
             }
         });
     }
