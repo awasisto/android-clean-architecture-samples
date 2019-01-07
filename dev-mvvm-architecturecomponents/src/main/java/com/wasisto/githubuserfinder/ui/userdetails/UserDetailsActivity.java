@@ -105,7 +105,6 @@ public class UserDetailsActivity extends AppCompatActivity {
         locationTextView = findViewById(R.id.locationTextView);
         blogTextView = findViewById(R.id.blogTextView);
 
-
         viewModel.getUser().observe(this, resource -> {
             if (resource != null) {
                 if (resource.status == LOADING) {
