@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_user);
+        setContentView(R.layout.activity_search);
 
         viewModel =
                 ViewModelProviders.of(

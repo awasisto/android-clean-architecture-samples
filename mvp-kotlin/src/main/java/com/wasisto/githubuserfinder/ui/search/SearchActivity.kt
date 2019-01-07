@@ -42,7 +42,7 @@ import android.widget.Toast.LENGTH_SHORT
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase
 import com.wasisto.githubuserfinder.domain.SearchUseCase
 
-import kotlinx.android.synthetic.main.activity_search_user.*
+import kotlinx.android.synthetic.main.activity_search.*
 
 class SearchActivity : AppCompatActivity(), SearchView {
 
@@ -54,7 +54,7 @@ class SearchActivity : AppCompatActivity(), SearchView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_user)
+        setContentView(R.layout.activity_search)
 
         presenter = SearchPresenterImpl(
             this,

@@ -65,7 +65,7 @@ public class SearchActivity extends DaggerAppCompatActivity implements SearchVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_user);
+        setContentView(R.layout.activity_search);
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         queryEditText = findViewById(R.id.queryEditText);
