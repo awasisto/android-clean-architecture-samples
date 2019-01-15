@@ -30,8 +30,6 @@ import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProvider;
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProviderImpl;
 import dagger.Binds;
 import dagger.Module;
 
@@ -51,10 +49,6 @@ public abstract class ApplicationModule {
     @Singleton
     @Binds
     public abstract SearchHistoryDataSource bindSearchHistoryDataSource(SearchHistoryDataSourceImpl searchHistoryDataSource);
-
-    @Singleton
-    @Binds
-    public abstract SchedulerProvider bindSchedulerProvider(SchedulerProviderImpl schedulerProvider);
 
     @Singleton
     @Binds
