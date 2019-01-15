@@ -28,11 +28,12 @@ import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.domain.GetSearchHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import javax.inject.Inject;
 import java.util.Collections;
-import java.util.List;
 
 public class SearchPresenterImpl implements SearchPresenter {
 
@@ -45,6 +46,8 @@ public class SearchPresenterImpl implements SearchPresenter {
     private GetSearchHistoryUseCase getSearchHistoryUseCase;
 
     private LoggingHelper loggingHelper;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
     public SearchPresenterImpl(SearchView view, SearchUseCase searchUseCase,
@@ -62,29 +65,28 @@ public class SearchPresenterImpl implements SearchPresenter {
         view.hideHistory();
         view.hideNoResultsText();
 
-        getSearchHistoryUseCase.execute(null, new DisposableObserver<List<SearchHistoryItem>>() {
-            @Override
-            public void onNext(List<SearchHistoryItem> history) {
-                view.hideLoadingIndicator();
+        compositeDisposable.add(
+            getSearchHistoryUseCase.execute(null)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            history -> {
+                                view.hideLoadingIndicator();
 
-                Collections.sort(history, (item1, item2) -> Integer.compare(item2.getId(),
-                        item1.getId()));
-                view.showHistory(history);
-            }
+                                Collections.sort(history, (item1, item2) -> Integer.compare(item2.getId(),
+                                        item1.getId()));
+                                view.showHistory(history);
+                            },
+                            error -> {
+                                loggingHelper.error(TAG, "An error occurred while getting the search " +
+                                        "user history", error);
 
-            @Override
-            public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting the search user history", error);
+                                view.hideLoadingIndicator();
 
-                view.hideLoadingIndicator();
-
-                view.showToast(R.string.an_error_occurred);
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+                                view.showToast(R.string.an_error_occurred);
+                            }
+                    )
+        );
     }
 
     @Override
@@ -113,37 +115,35 @@ public class SearchPresenterImpl implements SearchPresenter {
             view.hideHistory();
             view.hideNoResultsText();
 
-            searchUseCase.execute(query, new DisposableObserver<SearchUserResult>() {
-                @Override
-                public void onNext(SearchUserResult result) {
-                    view.hideLoadingIndicator();
+            compositeDisposable.add(
+                    searchUseCase.execute(query)
+                            .subscribeOn(Schedulers.computation())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    result -> {
+                                        view.hideLoadingIndicator();
 
-                    if (!result.getItems().isEmpty()) {
-                        view.showResultItems(result.getItems());
-                    } else {
-                        view.showNoResultsText();
-                    }
-                }
+                                        if (!result.getItems().isEmpty()) {
+                                            view.showResultItems(result.getItems());
+                                        } else {
+                                            view.showNoResultsText();
+                                        }
+                                    },
+                                    error -> {
+                                        loggingHelper.error(TAG, "An error occurred while searching users",
+                                                error);
 
-                @Override
-                public void onError(Throwable error) {
-                    loggingHelper.error(TAG, "An error occurred while searching users", error);
+                                        view.hideLoadingIndicator();
 
-                    view.hideLoadingIndicator();
-
-                    view.showToast(R.string.an_error_occurred);
-                }
-
-                @Override
-                public void onComplete() {
-                }
-            });
+                                        view.showToast(R.string.an_error_occurred);
+                                    }
+                            )
+            );
         }
     }
 
     @Override
     public void onViewDestroyed() {
-        searchUseCase.dispose();
-        getSearchHistoryUseCase.dispose();
+        compositeDisposable.dispose();
     }
 }

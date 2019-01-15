@@ -23,10 +23,11 @@
 package com.wasisto.githubuserfinder.ui.userdetails;
 
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.github.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
-import io.reactivex.observers.DisposableObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import javax.inject.Inject;
 
@@ -41,6 +42,8 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
     private GetUserUseCase getUserUseCase;
 
     private LoggingHelper loggingHelper;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Inject
     public UserDetailsPresenterImpl(String username, UserDetailsView view, GetUserUseCase getUserUseCase,
@@ -62,76 +65,72 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
 
         view.showLoadingIndicator();
 
-        getUserUseCase.execute(username, new DisposableObserver<User>() {
-            @Override
-            public void onNext(User user) {
-                view.hideLoadingIndicator();
+        compositeDisposable.add(
+                getUserUseCase.execute(username)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                user -> {
+                                    view.hideLoadingIndicator();
 
-                view.showAvatar(user.getAvatarUrl());
-                view.showUsername(user.getLogin());
+                                    view.showAvatar(user.getAvatarUrl());
+                                    view.showUsername(user.getLogin());
 
-                if (user.getName() != null) {
-                    view.showName(user.getName());
-                }
+                                    if (user.getName() != null) {
+                                        view.showName(user.getName());
+                                    }
 
-                if (user.getCompany() != null) {
-                    view.showCompany(user.getCompany());
-                }
+                                    if (user.getCompany() != null) {
+                                        view.showCompany(user.getCompany());
+                                    }
 
-                if (user.getLocation() != null) {
-                    view.showLocation(user.getLocation());
-                }
+                                    if (user.getLocation() != null) {
+                                        view.showLocation(user.getLocation());
+                                    }
 
-                if (user.getBlog() != null) {
-                    view.showBlog(user.getBlog());
-                }
-            }
+                                    if (user.getBlog() != null) {
+                                        view.showBlog(user.getBlog());
+                                    }
+                                },
+                                error -> {
+                                    loggingHelper.error(TAG, "An error occurred while getting a user", error);
 
-            @Override
-            public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting a user", error);
+                                    view.hideLoadingIndicator();
 
-                view.hideLoadingIndicator();
-
-                view.showToast(R.string.an_error_occurred);
-                view.closeActivity();
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+                                    view.showToast(R.string.an_error_occurred);
+                                    view.closeActivity();
+                                }
+                        )
+        );
     }
 
     @Override
     public void onBlogClick() {
         view.showLoadingIndicator();
 
-        getUserUseCase.execute(username, new DisposableObserver<User>() {
-            @Override
-            public void onNext(User user) {
-                view.hideLoadingIndicator();
+        compositeDisposable.add(
+                getUserUseCase.execute(username)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                user -> {
+                                    view.hideLoadingIndicator();
 
-                view.openBrowser(user.getBlog());
-            }
+                                    view.openBrowser(user.getBlog());
+                                },
+                                error -> {
+                                    loggingHelper.error(TAG, "An error occurred while getting a user", error);
 
-            @Override
-            public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting a user", error);
+                                    view.hideLoadingIndicator();
 
-                view.hideLoadingIndicator();
-
-                view.showToast(R.string.an_error_occurred);
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+                                    view.showToast(R.string.an_error_occurred);
+                                }
+                        )
+        );
     }
 
     @Override
     public void onViewDestroyed() {
-        getUserUseCase.dispose();
+        compositeDisposable.dispose();
     }
 }

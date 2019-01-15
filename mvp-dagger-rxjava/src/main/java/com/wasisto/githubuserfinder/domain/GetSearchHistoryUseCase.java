@@ -24,25 +24,22 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProvider;
 import io.reactivex.Observable;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class GetSearchHistoryUseCase extends UseCase<Void, List<SearchHistoryItem>> {
+public class GetSearchHistoryUseCase implements UseCase<Void, List<SearchHistoryItem>> {
 
     private SearchHistoryDataSource searchHistoryDataSource;
 
     @Inject
-    public GetSearchHistoryUseCase(SchedulerProvider schedulerProvider,
-                                   SearchHistoryDataSource searchHistoryDataSource) {
-        super(schedulerProvider);
+    public GetSearchHistoryUseCase(SearchHistoryDataSource searchHistoryDataSource) {
         this.searchHistoryDataSource = searchHistoryDataSource;
     }
 
     @Override
-    public Observable<List<SearchHistoryItem>> createUseCaseObservable(Void params) {
+    public Observable<List<SearchHistoryItem>> execute(Void params) {
         return searchHistoryDataSource.getAll();
     }
 }

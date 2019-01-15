@@ -27,13 +27,11 @@ import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProvider;
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
 
 import javax.inject.Inject;
 
-public class SearchUseCase extends UseCase<String, SearchUserResult> {
+public class SearchUseCase implements UseCase<String, SearchUserResult> {
 
     private static final String TAG = "SearchUseCase";
 
@@ -41,45 +39,31 @@ public class SearchUseCase extends UseCase<String, SearchUserResult> {
 
     private SearchHistoryDataSource searchHistoryDataSource;
 
-    private SchedulerProvider schedulerProvider;
-
     private LoggingHelper loggingHelper;
 
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
     @Inject
-    public SearchUseCase(SchedulerProvider schedulerProvider, GithubDataSource githubDataSource,
-                         SearchHistoryDataSource searchHistoryDataSource, LoggingHelper loggingHelper) {
-        super(schedulerProvider);
+    public SearchUseCase(GithubDataSource githubDataSource, SearchHistoryDataSource searchHistoryDataSource,
+                         LoggingHelper loggingHelper) {
         this.githubDataSource = githubDataSource;
         this.searchHistoryDataSource = searchHistoryDataSource;
-        this.schedulerProvider = schedulerProvider;
         this.loggingHelper = loggingHelper;
     }
 
     @Override
-    public Observable<SearchUserResult> createUseCaseObservable(String query) {
+    public Observable<SearchUserResult> execute(String query) {
         SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
         searchHistoryItem.setQuery(query);
 
-        compositeDisposable.add(
-                searchHistoryDataSource.add(searchHistoryItem)
-                        .subscribeOn(schedulerProvider.computation())
-                        .observeOn(schedulerProvider.ui())
-                        .subscribe(
-                                () -> loggingHelper.info(TAG, "Query added to the search history"),
-                                error -> loggingHelper.warn(TAG, "An error occurred while adding a query to " +
-                                        "the search history", error)
-                        )
-        );
-
-        return githubDataSource.searchUser(query);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-
-        compositeDisposable.dispose();
+        return searchHistoryDataSource.add(searchHistoryItem)
+                .doOnComplete(
+                        () -> loggingHelper.info(TAG, "Query added to the search history")
+                )
+                .doOnError(
+                        error -> loggingHelper.warn(TAG, "An error occurred while adding a query to the " +
+                                "search history", error)
+                )
+                .andThen(
+                        githubDataSource.searchUser(query)
+                );
     }
 }

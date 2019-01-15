@@ -24,23 +24,21 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.data.github.model.User;
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProvider;
 import io.reactivex.Observable;
 
 import javax.inject.Inject;
 
-public class GetUserUseCase extends UseCase<String, User> {
+public class GetUserUseCase implements UseCase<String, User> {
 
     private GithubDataSource githubDataSource;
 
     @Inject
-    public GetUserUseCase(SchedulerProvider schedulerProvider, GithubDataSource githubDataSource) {
-        super(schedulerProvider);
+    public GetUserUseCase(GithubDataSource githubDataSource) {
         this.githubDataSource = githubDataSource;
     }
 
     @Override
-    public Observable<User> createUseCaseObservable(String username) {
+    public Observable<User> execute(String username) {
         return githubDataSource.getUser(username);
     }
 }

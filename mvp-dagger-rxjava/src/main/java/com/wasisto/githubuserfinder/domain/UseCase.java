@@ -22,33 +22,9 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.util.scheduler.SchedulerProvider;
 import io.reactivex.Observable;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableObserver;
 
-public abstract class UseCase<Params, Result> {
+public interface UseCase<Params, Result> {
 
-    private SchedulerProvider schedulerProvider;
-
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    public UseCase(SchedulerProvider schedulerProvider) {
-        this.schedulerProvider = schedulerProvider;
-    }
-
-    public abstract Observable<Result> createUseCaseObservable(Params params);
-
-    public void execute(Params params, DisposableObserver<Result> observer) {
-        compositeDisposable.add(
-                createUseCaseObservable(params)
-                        .subscribeOn(schedulerProvider.computation())
-                        .observeOn(schedulerProvider.ui())
-                        .subscribeWith(observer)
-        );
-    }
-
-    public void dispose() {
-        compositeDisposable.dispose();
-    }
+    Observable<Result> execute(Params params);
 }
