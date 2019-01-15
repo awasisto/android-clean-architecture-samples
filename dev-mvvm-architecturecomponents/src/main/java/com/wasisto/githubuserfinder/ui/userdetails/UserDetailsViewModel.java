@@ -22,21 +22,82 @@
 
 package com.wasisto.githubuserfinder.ui.userdetails;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import com.wasisto.githubuserfinder.data.Resource;
+import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.ui.Event;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
+
+import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
+import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
+import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
 
 public class UserDetailsViewModel extends ViewModel {
 
-    private LiveData<Resource<User>> user;
+    private static final String TAG = "UserDetailsViewModel";
 
-    public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase) {
-        user = getUserUseCase.execute(username);
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
+    private MutableLiveData<User> user = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> isUserShouldBeShown = new MutableLiveData<>();
+
+    private MutableLiveData<Event<String>> openBrowserEvent = new MutableLiveData<>();
+
+    private MutableLiveData<Event<Integer>> showToastEvent = new MutableLiveData<>();
+
+    private MutableLiveData<Event<Void>> closeActivityEvent = new MutableLiveData<>();
+
+    public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
+        getUserUseCase.execute(username).observeForever(resource -> {
+            if (resource != null) {
+                if (resource.status == LOADING) {
+                    isLoading.setValue(true);
+                    isUserShouldBeShown.setValue(false);
+                } else if (resource.status == SUCCESS) {
+                    isLoading.setValue(false);
+                    user.setValue(resource.data);
+                    isUserShouldBeShown.setValue(true);
+                } else if (resource.status == ERROR) {
+                    loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
+
+                    isLoading.setValue(false);
+                    showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
+                    closeActivityEvent.setValue(new Event<>(null));
+                }
+            }
+        });
     }
 
-    public LiveData<Resource<User>> getUser() {
+    public void onBlogClick() {
+        if (user.getValue() != null) {
+            openBrowserEvent.setValue(new Event<>(user.getValue().getBlog()));
+        }
+    }
+
+    public MutableLiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public MutableLiveData<User> getUser() {
         return user;
+    }
+
+    public MutableLiveData<Boolean> getIsUserShouldBeShown() {
+        return isUserShouldBeShown;
+    }
+
+    public MutableLiveData<Event<String>> getOpenBrowserEvent() {
+        return openBrowserEvent;
+    }
+
+    public MutableLiveData<Event<Integer>> getShowToastEvent() {
+        return showToastEvent;
+    }
+
+    public MutableLiveData<Event<Void>> getCloseActivityEvent() {
+        return closeActivityEvent;
     }
 }

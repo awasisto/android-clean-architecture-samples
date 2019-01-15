@@ -26,55 +26,30 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl;
+import com.wasisto.githubuserfinder.databinding.ActivitySearchBinding;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
-import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private static final String TAG = "SearchActivity";
-
     private SearchViewModel viewModel;
 
-    private ProgressBar loadingIndicator;
-
-    private EditText queryEditText;
-
-    private Button searchButton;
-
-    private RecyclerView resultRecyclerView;
-
-    private RecyclerView historyRecyclerView;
-
-    private TextView noResultsTextView;
-
-    private HistoryAdapter historyAdapter;
-
-    private ResultAdapter resultAdapter;
-
-    private LoggingHelper loggingHelper = LoggingHelperImpl.getInstance();
+    private ActivitySearchBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,88 +72,37 @@ public class SearchActivity extends AppCompatActivity {
                                         ),
                                         new GetHistoryUseCase(
                                                 SearchHistoryDataSourceImpl.getInstance(SearchActivity.this)
-                                        )
+                                        ),
+                                        LoggingHelperImpl.getInstance()
                                 );
                             }
                         }
                 ).get(SearchViewModel.class);
 
-        loadingIndicator = findViewById(R.id.loadingIndicator);
-        queryEditText = findViewById(R.id.queryEditText);
-        searchButton = findViewById(R.id.searchButton);
-        resultRecyclerView = findViewById(R.id.resultRecyclerView);
-        historyRecyclerView = findViewById(R.id.historyRecyclerView);
-        noResultsTextView = findViewById(R.id.noResultsTextView);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        binding.setLifecycleOwner(this);
+        binding.setViewModel(viewModel);
 
-        historyAdapter = new HistoryAdapter(new ArrayList<>());
-        historyAdapter.setOnItemClickListener(historyItem -> viewModel.onSearch(historyItem.getQuery()));
+        HistoryAdapter historyAdapter = new HistoryAdapter(new ArrayList<>(), viewModel);
+        binding.historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.historyRecyclerView.setAdapter(historyAdapter);
 
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        historyRecyclerView.setAdapter(historyAdapter);
+        ResultAdapter resultAdapter = new ResultAdapter(new ArrayList<>(), viewModel);
+        binding.resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.resultRecyclerView.setAdapter(resultAdapter);
 
-        resultAdapter = new ResultAdapter(new ArrayList<>());
-        resultAdapter.setOnItemClickListener(resultItem -> {
-            Intent intent = new Intent(this, UserDetailsActivity.class);
-            intent.putExtra(UserDetailsActivity.EXTRA_USERNAME, resultItem.getLogin());
+        viewModel.getOpenUserDetailsActivityEvent().observe(this, event -> {
+            if (event != null) {
+                Intent intent = new Intent(this, UserDetailsActivity.class);
+                intent.putExtra(UserDetailsActivity.EXTRA_USERNAME, event.getData());
 
-            startActivity(intent);
-        });
-
-        resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        resultRecyclerView.setAdapter(resultAdapter);
-
-        searchButton.setOnClickListener(v -> viewModel.onSearch(queryEditText.getText().toString()));
-
-        viewModel.getHistory().observe(this, resource -> {
-            if (resource != null) {
-                if (resource.status == LOADING) {
-                    loadingIndicator.setVisibility(VISIBLE);
-                    resultRecyclerView.setVisibility(GONE);
-                    historyRecyclerView.setVisibility(GONE);
-                    noResultsTextView.setVisibility(GONE);
-                } else {
-                    loadingIndicator.setVisibility(GONE);
-
-                    if (resource.status == SUCCESS) {
-                        historyRecyclerView.setVisibility(VISIBLE);
-                        historyAdapter.setData(resource.data);
-                        historyAdapter.notifyDataSetChanged();
-                    } else if (resource.status == ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while getting the search " +
-                                "user history", resource.error);
-
-                        Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
-                    }
-                }
+                startActivity(intent);
             }
         });
 
-        viewModel.getResult().observe(this, resource -> {
-            if (resource != null) {
-                if (resource.status == LOADING) {
-                    loadingIndicator.setVisibility(VISIBLE);
-                    resultRecyclerView.setVisibility(GONE);
-                    historyRecyclerView.setVisibility(GONE);
-                    noResultsTextView.setVisibility(GONE);
-                } else {
-                    loadingIndicator.setVisibility(GONE);
-
-                    if (resource.status == SUCCESS) {
-                        List<SearchUserResult.Item> resultItems = resource.data.getItems();
-                        if (!resultItems.isEmpty()) {
-                            resultRecyclerView.setVisibility(VISIBLE);
-
-                            resultAdapter.setData(resultItems);
-                            resultAdapter.notifyDataSetChanged();
-                        } else {
-                            noResultsTextView.setVisibility(VISIBLE);
-                        }
-                    } else if (resource.status == ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while searching users", resource.error);
-
-                        Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
-                    }
-                }
+        viewModel.getShowToastEvent().observe(this, event -> {
+            if (event != null) {
+                Toast.makeText(SearchActivity.this, event.getData(), LENGTH_SHORT).show();
             }
         });
     }

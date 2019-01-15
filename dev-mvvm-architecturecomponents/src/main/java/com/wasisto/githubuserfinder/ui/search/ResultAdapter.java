@@ -22,16 +22,14 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
+import com.wasisto.githubuserfinder.databinding.ItemResultBinding;
 
 import java.util.List;
 
@@ -39,32 +37,27 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     private List<SearchUserResult.Item> data;
 
-    private OnItemClickListener mOnItemClickListener;
+    private SearchViewModel viewModel;
 
-    public ResultAdapter(List<SearchUserResult.Item> data) {
+    public ResultAdapter(List<SearchUserResult.Item> data, SearchViewModel viewModel) {
         this.data = data;
+        this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_result, parent, false);
-        return new ViewHolder(view);
+        ItemResultBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()), R.layout.item_result, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SearchUserResult.Item resultItem = data.get(position);
-
-        Picasso.get().load(resultItem.getAvatarUrl()).placeholder(R.color.colorAccent).into(holder.avatarImageView);
-
-        holder.usernameTextView.setText(resultItem.getLogin());
-
-        holder.itemView.setOnClickListener(v -> {
-            if (mOnItemClickListener != null) {
-                mOnItemClickListener.onItemClick(resultItem);
-            }
-        });
+        holder.bind(
+                data.get(position),
+                resultItem -> viewModel.onResultItemClick(resultItem)
+        );
     }
 
     @Override
@@ -76,26 +69,18 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         this.data = data;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView avatarImageView;
+        private ItemResultBinding binding;
 
-        public TextView usernameTextView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            avatarImageView = itemView.findViewById(R.id.avatarImageView);
-            usernameTextView = itemView.findViewById(R.id.usernameTextView);
+        public ViewHolder(ItemResultBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
-    }
 
-    public interface OnItemClickListener {
-
-        void onItemClick(SearchUserResult.Item resultItem);
+        public void bind(SearchUserResult.Item resultItem, ResultItemActionsListener listener) {
+            binding.setResultItem(resultItem);
+            binding.setListener(listener);
+        }
     }
 }

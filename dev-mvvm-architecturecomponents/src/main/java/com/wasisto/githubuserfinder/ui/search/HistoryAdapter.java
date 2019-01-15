@@ -22,14 +22,14 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.databinding.ItemHistoryBinding;
 
 import java.util.List;
 
@@ -37,30 +37,27 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private List<SearchHistoryItem> data;
 
-    private OnItemClickListener onItemClickListener;
+    private SearchViewModel viewModel;
 
-    public HistoryAdapter(List<SearchHistoryItem> data) {
+    public HistoryAdapter(List<SearchHistoryItem> data, SearchViewModel viewModel) {
         this.data = data;
+        this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false);
-        return new ViewHolder(view);
+        ItemHistoryBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()), R.layout.item_history, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SearchHistoryItem historyItem = data.get(position);
-
-        holder.queryTextView.setText(historyItem.getQuery());
-
-        holder.itemView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(historyItem);
-            }
-        });
+        holder.bind(
+                data.get(position),
+                historyItem -> viewModel.onHistoryItemClick(historyItem)
+        );
     }
 
     @Override
@@ -72,23 +69,18 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         this.data = data;
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView queryTextView;
+        private ItemHistoryBinding binding;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            queryTextView = itemView.findViewById(R.id.queryTextView);
+        public ViewHolder(ItemHistoryBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
-    }
 
-    interface OnItemClickListener {
-
-        void onItemClick(SearchHistoryItem historyItem);
+        public void bind(SearchHistoryItem historyItem, HistoryItemActionsListener listener) {
+            binding.setHistoryItem(historyItem);
+            binding.setListener(listener);
+        }
     }
 }

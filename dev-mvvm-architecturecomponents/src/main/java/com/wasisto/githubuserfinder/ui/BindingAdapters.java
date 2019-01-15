@@ -20,41 +20,30 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.data;
+package com.wasisto.githubuserfinder.ui;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+import android.databinding.BindingAdapter;
+import android.view.View;
+import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
+import com.wasisto.githubuserfinder.R;
 
-public class Resource<T> {
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
-    public Status status;
+public class BindingAdapters {
 
-    public T data;
-
-    public Throwable error;
-
-    private Resource(Status status, T data, Throwable error) {
-        this.status = status;
-        this.data = data;
-        this.error = error;
+    @BindingAdapter("visibleWhen")
+    public static void visibleWhen(View view, Boolean visible) {
+        if (visible != null && visible) {
+            view.setVisibility(VISIBLE);
+        } else {
+            view.setVisibility(GONE);
+        }
     }
 
-    public static <T> Resource<T> success(T data) {
-        return new Resource<>(SUCCESS, data, null);
-    }
-
-    public static <T> Resource<T> error(Throwable error) {
-        return new Resource<>(ERROR, null, error);
-    }
-
-    public static <T> Resource<T> loading() {
-        return new Resource<>(LOADING, null, null);
-    }
-
-    public enum Status {
-        SUCCESS,
-        ERROR,
-        LOADING
+    @BindingAdapter("imageUrl")
+    public static void setImageUrl(ImageView imageView, String imageUrl) {
+        Picasso.get().load(imageUrl).placeholder(R.color.colorAccent).into(imageView);
     }
 }

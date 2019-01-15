@@ -21,18 +21,27 @@
   ~ SOFTWARE.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="12dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="12dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/queryTextView"
+    <data>
+        <variable name="historyItem" type="com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem" />
+        <variable name="listener" type="com.wasisto.githubuserfinder.ui.search.HistoryItemActionsListener" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="16sp" />
-</FrameLayout>
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:onClick="@{() -> listener.onClick(historyItem)}">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="16sp"
+            android:text="@{historyItem.query}" />
+    </FrameLayout>
+</layout>

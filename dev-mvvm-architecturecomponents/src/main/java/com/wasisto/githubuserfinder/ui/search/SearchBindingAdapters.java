@@ -20,41 +20,32 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.data;
+package com.wasisto.githubuserfinder.ui.search;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+import android.databinding.BindingAdapter;
+import android.support.v7.widget.RecyclerView;
+import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
+import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 
-public class Resource<T> {
+import java.util.List;
 
-    public Status status;
+public class SearchBindingAdapters {
 
-    public T data;
-
-    public Throwable error;
-
-    private Resource(Status status, T data, Throwable error) {
-        this.status = status;
-        this.data = data;
-        this.error = error;
+    @BindingAdapter("items")
+    public static void setResultItems(RecyclerView recyclerView, List<SearchUserResult.Item> resultItems) {
+        ResultAdapter resultAdapter = (ResultAdapter) recyclerView.getAdapter();
+        if (resultAdapter != null) {
+            resultAdapter.setData(resultItems);
+            resultAdapter.notifyDataSetChanged();
+        }
     }
 
-    public static <T> Resource<T> success(T data) {
-        return new Resource<>(SUCCESS, data, null);
-    }
-
-    public static <T> Resource<T> error(Throwable error) {
-        return new Resource<>(ERROR, null, error);
-    }
-
-    public static <T> Resource<T> loading() {
-        return new Resource<>(LOADING, null, null);
-    }
-
-    public enum Status {
-        SUCCESS,
-        ERROR,
-        LOADING
+    @BindingAdapter("items")
+    public static void setHistory(RecyclerView recyclerView, List<SearchHistoryItem> history) {
+        HistoryAdapter historyAdapter = (HistoryAdapter) recyclerView.getAdapter();
+        if (historyAdapter != null) {
+            historyAdapter.setData(history);
+            historyAdapter.notifyDataSetChanged();
+        }
     }
 }
