@@ -22,12 +22,9 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,28 +53,20 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        viewModel =
-                ViewModelProviders.of(
-                        this,
-                        new ViewModelProvider.Factory() {
-                            @NonNull
-                            @Override
-                            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                                // noinspection unchecked
-                                return (T) new SearchViewModel(
-                                        new SearchUseCase(
-                                                GithubDataSourceImpl.getInstance(SearchActivity.this),
-                                                SearchHistoryDataSourceImpl.getInstance(SearchActivity.this),
-                                                LoggingHelperImpl.getInstance()
-                                        ),
-                                        new GetHistoryUseCase(
-                                                SearchHistoryDataSourceImpl.getInstance(SearchActivity.this)
-                                        ),
-                                        LoggingHelperImpl.getInstance()
-                                );
-                            }
-                        }
-                ).get(SearchViewModel.class);
+        SearchViewModelFactory viewModelFactory =
+                new SearchViewModelFactory(
+                        new SearchUseCase(
+                                GithubDataSourceImpl.getInstance(this),
+                                SearchHistoryDataSourceImpl.getInstance(this),
+                                LoggingHelperImpl.getInstance()
+                        ),
+                        new GetHistoryUseCase(
+                                SearchHistoryDataSourceImpl.getInstance(this)
+                        ),
+                        LoggingHelperImpl.getInstance()
+                );
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel.class);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setLifecycleOwner(this);

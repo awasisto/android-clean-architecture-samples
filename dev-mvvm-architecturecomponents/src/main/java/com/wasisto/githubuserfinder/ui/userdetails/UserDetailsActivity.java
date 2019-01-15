@@ -26,7 +26,6 @@ import android.arch.lifecycle.*;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -34,7 +33,6 @@ import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
 import com.wasisto.githubuserfinder.databinding.ActivityUserDetailsBinding;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
-import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import static android.content.Intent.ACTION_VIEW;
@@ -54,24 +52,14 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         String username = getIntent().getStringExtra(EXTRA_USERNAME);
 
-        viewModel =
-                ViewModelProviders.of(
-                        this,
-                        new ViewModelProvider.Factory() {
-                            @NonNull
-                            @Override
-                            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                                // noinspection unchecked
-                                return (T) new UserDetailsViewModel(
-                                        username,
-                                        new GetUserUseCase(
-                                                GithubDataSourceImpl.getInstance(UserDetailsActivity.this)
-                                        ),
-                                        LoggingHelperImpl.getInstance()
-                                );
-                            }
-                        }
-                ).get(UserDetailsViewModel.class);
+        UserDetailsViewModelFactory viewModelFactory =
+                new UserDetailsViewModelFactory(
+                        username,
+                        new GetUserUseCase(GithubDataSourceImpl.getInstance(this)),
+                        LoggingHelperImpl.getInstance()
+                );
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserDetailsViewModel.class);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details);
         binding.setLifecycleOwner(this);
