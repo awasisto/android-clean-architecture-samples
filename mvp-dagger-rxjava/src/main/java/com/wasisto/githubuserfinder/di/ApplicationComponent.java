@@ -24,8 +24,6 @@ package com.wasisto.githubuserfinder.di;
 
 import android.app.Application;
 import com.wasisto.githubuserfinder.GithubUserFinderApplication;
-import com.wasisto.githubuserfinder.data.github.GithubDataSourceModule;
-import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceModule;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjector;
@@ -38,9 +36,7 @@ import javax.inject.Singleton;
         modules = {
                 AndroidSupportInjectionModule.class,
                 ApplicationModule.class,
-                ActivityBindingModule.class,
-                GithubDataSourceModule.class,
-                SearchHistoryDataSourceModule.class
+                ActivityBindingModule.class
         }
 )
 public interface ApplicationComponent extends AndroidInjector<GithubUserFinderApplication> {

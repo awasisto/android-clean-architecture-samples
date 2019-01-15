@@ -23,6 +23,7 @@
 package com.wasisto.githubuserfinder.data.searchhistory;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -45,8 +46,8 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
     private SearchHistoryDbHelper dbHelper;
 
     @Inject
-    public SearchHistoryDataSourceImpl(SearchHistoryDbHelper dbHelper) {
-        this.dbHelper = dbHelper;
+    public SearchHistoryDataSourceImpl(Context context) {
+        dbHelper = new SearchHistoryDbHelper(context);
     }
 
     @Override
