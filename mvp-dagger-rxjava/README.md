@@ -18,7 +18,7 @@ A simple app for searching GitHub users with search history feature.
 Package structure
 -----------------
 
-![](https://i.imgur.com/CoZoQAJ.png)
+![](https://i.imgur.com/az0xpTD.png)
 
 Layers overview
 ---------------
