@@ -54,7 +54,7 @@ public class SearchPresenterImpl implements SearchPresenter {
     }
 
     @Override
-    public void onViewReady() {
+    public void onViewCreated() {
         view.showLoadingIndicator();
         view.hideResultItems();
         view.hideHistory();

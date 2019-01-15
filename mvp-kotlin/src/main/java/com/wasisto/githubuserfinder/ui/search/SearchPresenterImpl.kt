@@ -41,7 +41,7 @@ class SearchPresenterImpl(
         private const val TAG = "SearchPresenterImpl"
     }
 
-    override fun onViewReady() {
+    override fun onViewCreated() {
         view.showLoadingIndicator()
         view.hideResultItems()
         view.hideHistory()

@@ -88,7 +88,7 @@ public class SearchActivity extends DaggerAppCompatActivity implements SearchVie
 
         searchButton.setOnClickListener(v -> presenter.onSearch(queryEditText.getText().toString()));
 
-        presenter.onViewReady();
+        presenter.onViewCreated();
     }
 
     @Override

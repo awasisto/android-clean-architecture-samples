@@ -49,7 +49,7 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
     }
 
     @Override
-    public void onViewReady() {
+    public void onViewCreated() {
         view.hideAvatar();
         view.hideName();
         view.hideUsername();

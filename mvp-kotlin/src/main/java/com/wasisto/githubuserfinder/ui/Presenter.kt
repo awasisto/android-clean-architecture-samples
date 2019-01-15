@@ -24,5 +24,5 @@ package com.wasisto.githubuserfinder.ui
 
 interface Presenter {
 
-    fun onViewReady()
+    fun onViewCreated()
 }

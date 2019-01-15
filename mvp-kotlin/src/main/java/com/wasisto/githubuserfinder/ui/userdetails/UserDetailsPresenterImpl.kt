@@ -38,7 +38,7 @@ class UserDetailsPresenterImpl(
         private const val TAG = "UserDetailsPresenterImp"
     }
 
-    override fun onViewReady() {
+    override fun onViewCreated() {
         view.hideAvatar()
         view.hideName()
         view.hideUsername()

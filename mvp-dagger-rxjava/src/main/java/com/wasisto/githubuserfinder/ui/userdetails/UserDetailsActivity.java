@@ -76,7 +76,7 @@ public class UserDetailsActivity extends DaggerAppCompatActivity implements User
 
         blogTextView.setOnClickListener(v -> presenter.onBlogClick());
 
-        presenter.onViewReady();
+        presenter.onViewCreated();
     }
 
     @Override

@@ -67,7 +67,7 @@ class UserDetailsActivity : AppCompatActivity(), UserDetailsView {
 
         blogTextView.setOnClickListener { presenter.onBlogClick() }
 
-        presenter.onViewReady()
+        presenter.onViewCreated()
     }
 
     override fun showLoadingIndicator() {

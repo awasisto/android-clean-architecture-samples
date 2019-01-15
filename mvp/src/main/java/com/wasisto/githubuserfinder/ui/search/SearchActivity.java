@@ -104,7 +104,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
         searchButton.setOnClickListener(v -> presenter.onSearch(queryEditText.getText().toString()));
 
-        presenter.onViewReady();
+        presenter.onViewCreated();
     }
 
     @Override

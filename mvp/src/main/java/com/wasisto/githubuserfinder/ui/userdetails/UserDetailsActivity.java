@@ -87,7 +87,7 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
 
         blogTextView.setOnClickListener(v -> presenter.onBlogClick());
 
-        presenter.onViewReady();
+        presenter.onViewCreated();
     }
 
     @Override

@@ -84,7 +84,7 @@ class SearchActivity : AppCompatActivity(), SearchView {
 
         searchButton.setOnClickListener { presenter.onSearch(queryEditText.text.toString()) }
 
-        presenter.onViewReady()
+        presenter.onViewCreated()
     }
 
     override fun showLoadingIndicator() {

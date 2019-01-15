@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.ui;
 
 public interface Presenter {
 
-    void onViewReady();
+    void onViewCreated();
 
     void onViewDestroyed();
 }
