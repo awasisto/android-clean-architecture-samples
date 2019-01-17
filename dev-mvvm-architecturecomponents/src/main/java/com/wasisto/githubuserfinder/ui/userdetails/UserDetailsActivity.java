@@ -76,7 +76,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         viewModel.getShowToastEvent().observe(this, event -> {
             if (event != null) {
-                Toast.makeText(this, R.string.an_error_occurred, LENGTH_SHORT).show();
+                Toast.makeText(this, event.getData(), LENGTH_SHORT).show();
             }
         });
 
