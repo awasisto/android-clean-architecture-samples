@@ -23,6 +23,7 @@
 package com.wasisto.githubuserfinder.domain;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
 import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
@@ -52,20 +53,31 @@ public class SearchUseCase implements UseCase<String, Resource<SearchUserResult>
 
     @Override
     public LiveData<Resource<SearchUserResult>> execute(String query) {
+        MediatorLiveData liveData = new MediatorLiveData<>();
+
         SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
         searchHistoryItem.setQuery(query);
 
-        searchHistoryDataSource.add(searchHistoryItem).observeForever(resource -> {
-            if (resource != null) {
-                if (resource.status == SUCCESS) {
-                    loggingHelper.info(TAG, "Query added to the search history");
-                } else if (resource.status == ERROR) {
-                    loggingHelper.warn(TAG, "An error occurred while adding a query to the " +
-                            "search history", resource.error);
+        liveData.addSource(
+                searchHistoryDataSource.add(searchHistoryItem),
+                object -> {
+                    if (object != null) {
+                        Resource resource = (Resource) object;
+                        if (resource.status == SUCCESS) {
+                            loggingHelper.info(TAG, "Query added to the search history");
+                        } else if (resource.status == ERROR) {
+                            loggingHelper.warn(TAG, "An error occurred while adding a query to the " +
+                                            "search history", resource.error);
+                        }
+                    }
                 }
-            }
-        });
+        );
 
-        return githubDataSource.searchUser(query);
+        liveData.addSource(
+                githubDataSource.searchUser(query),
+                liveData::setValue
+        );
+
+        return liveData;
     }
 }

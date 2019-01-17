@@ -22,9 +22,9 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.*;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
@@ -32,7 +32,6 @@ import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.Event;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-import java.util.Collections;
 import java.util.List;
 
 import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
@@ -43,23 +42,27 @@ public class SearchViewModel extends ViewModel {
 
     private static final String TAG = "SearchViewModel";
 
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private MediatorLiveData<Resource<SearchUserResult>> searchUserResult = new MediatorLiveData<>();
+
+    private MediatorLiveData<Resource<List<SearchHistoryItem>>> getHistoryResult = new MediatorLiveData<>();
 
     private MutableLiveData<String> query = new MutableLiveData<>();
 
-    private MutableLiveData<SearchUserResult> result = new MutableLiveData<>();
+    private LiveData<SearchUserResult> result;
 
-    private MutableLiveData<List<SearchHistoryItem>> history = new MutableLiveData<>();
+    private LiveData<List<SearchHistoryItem>> history;
 
-    private MutableLiveData<Boolean> isResultEmpty = new MutableLiveData<>();
+    private LiveData<Boolean> isNoResultsTextShouldBeShown;
 
-    private MutableLiveData<Boolean> isResultShouldBeShown = new MutableLiveData<>();
+    private LiveData<Boolean> isResultShouldBeShown;
 
-    private MutableLiveData<Boolean> isHistoryShouldBeShown = new MutableLiveData<>();
+    private MediatorLiveData<Boolean> isHistoryShouldBeShown = new MediatorLiveData<>();
+
+    private MediatorLiveData<Boolean> isLoading = new MediatorLiveData<>();
+
+    private MediatorLiveData<Event<Integer>> showToastEvent = new MediatorLiveData<>();
 
     private MutableLiveData<Event<String>> openUserDetailsActivityEvent = new MutableLiveData<>();
-
-    private MutableLiveData<Event<Integer>> showToastEvent = new MutableLiveData<>();
 
     private SearchUseCase searchUseCase;
 
@@ -70,52 +73,106 @@ public class SearchViewModel extends ViewModel {
         this.searchUseCase = searchUseCase;
         this.loggingHelper = loggingHelper;
 
-        getHistoryUseCase.execute(null).observeForever(resource -> {
-            if (resource != null) {
-                isResultShouldBeShown.setValue(false);
+        getHistoryResult.addSource(
+                getHistoryUseCase.execute(null),
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting the search user history",
+                                resource.error);
+                    }
 
-                if (resource.status == LOADING) {
-                    isLoading.setValue(true);
-                    isHistoryShouldBeShown.setValue(false);
-                } else if (resource.status == SUCCESS) {
-                    isLoading.setValue(false);
-                    Collections.sort(resource.data, (item1, item2) -> Integer.compare(item2.getId(), item1.getId()));
-                    history.setValue(resource.data);
-                    isHistoryShouldBeShown.setValue(true);
-                } else if (resource.status == ERROR) {
-                    loggingHelper.error(TAG, "An error occurred while getting the search user history",
-                            resource.error);
-
-                    isLoading.setValue(false);
-                    showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
+                    getHistoryResult.setValue(resource);
                 }
-            }
-        });
-    }
+        );
 
-    public void onSearch() {
-        if (query.getValue() == null || query.getValue().isEmpty()) {
-            showToastEvent.setValue(new Event<>(R.string.enter_search_query));
-        } else {
-            searchUseCase.execute(query.getValue()).observeForever(resource -> {
-                if (resource != null) {
-                    isHistoryShouldBeShown.setValue(false);
+        result = Transformations.map(
+                searchUserResult,
+                resource -> resource.data
+        );
 
-                    if (resource.status == LOADING) {
-                        isLoading.setValue(true);
-                        isResultShouldBeShown.setValue(false);
-                    } else if (resource.status == SUCCESS) {
-                        isLoading.setValue(false);
-                        result.setValue(resource.data);
-                        isResultShouldBeShown.setValue(true);
-                    } else if (resource.status == ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while searching users", resource.error);
+        history = Transformations.map(
+                getHistoryResult,
+                resource -> resource.data
+        );
 
-                        isLoading.setValue(false);
+        isNoResultsTextShouldBeShown = Transformations.map(
+                searchUserResult,
+                resource -> {
+                    if (resource.status == SUCCESS) {
+                        return resource.data.getTotalCount() == 0;
+                    } else {
+                        return false;
+                    }
+                }
+        );
+
+        isResultShouldBeShown = Transformations.map(
+                searchUserResult,
+                resource -> resource.status == SUCCESS
+        );
+
+        isHistoryShouldBeShown.setValue(true);
+
+        isHistoryShouldBeShown.addSource(
+                searchUserResult,
+                resource -> isHistoryShouldBeShown.setValue(false)
+        );
+
+        isLoading.addSource(
+                searchUserResult,
+                resource -> {
+                    if (resource != null) {
+                        isLoading.setValue(resource.status == LOADING);
+                    }
+                }
+        );
+
+        isLoading.addSource(
+                getHistoryResult,
+                resource -> {
+                    if (resource != null) {
+                        isLoading.setValue(resource.status == LOADING);
+                    }
+                }
+        );
+
+        showToastEvent.addSource(
+                searchUserResult,
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
-            });
+        );
+
+        showToastEvent.addSource(
+                getHistoryResult,
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
+                        showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
+                    }
+                }
+        );
+    }
+
+    public void onSearch() {
+        String queryValue = query.getValue();
+        if (queryValue != null) {
+            if (query.getValue().isEmpty()) {
+                showToastEvent.setValue(new Event<>(R.string.enter_search_query));
+            } else {
+                searchUserResult.addSource(
+                        searchUseCase.execute(queryValue),
+                        resource -> {
+                            if (resource != null && resource.status == ERROR) {
+                                loggingHelper.error(TAG, "An error occurred while searching users",
+                                        resource.error);
+                            }
+
+                            searchUserResult.setValue(resource);
+                        }
+                );
+            }
         }
     }
 
@@ -128,39 +185,39 @@ public class SearchViewModel extends ViewModel {
         onSearch();
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
-        return isLoading;
-    }
-
     public MutableLiveData<String> getQuery() {
         return query;
     }
 
-    public MutableLiveData<SearchUserResult> getResult() {
+    public LiveData<SearchUserResult> getResult() {
         return result;
     }
 
-    public MutableLiveData<List<SearchHistoryItem>> getHistory() {
+    public LiveData<List<SearchHistoryItem>> getHistory() {
         return history;
     }
 
-    public MutableLiveData<Boolean> getIsResultEmpty() {
-        return isResultEmpty;
+    public LiveData<Boolean> getIsNoResultsTextShouldBeShown() {
+        return isNoResultsTextShouldBeShown;
     }
 
-    public MutableLiveData<Boolean> getIsResultShouldBeShown() {
+    public LiveData<Boolean> getIsResultShouldBeShown() {
         return isResultShouldBeShown;
     }
 
-    public MutableLiveData<Boolean> getIsHistoryShouldBeShown() {
+    public LiveData<Boolean> getIsHistoryShouldBeShown() {
         return isHistoryShouldBeShown;
+    }
+
+    public MediatorLiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public MediatorLiveData<Event<Integer>> getShowToastEvent() {
+        return showToastEvent;
     }
 
     public MutableLiveData<Event<String>> getOpenUserDetailsActivityEvent() {
         return openUserDetailsActivityEvent;
-    }
-
-    public MutableLiveData<Event<Integer>> getShowToastEvent() {
-        return showToastEvent;
     }
 }

@@ -22,9 +22,9 @@
 
 package com.wasisto.githubuserfinder.ui.userdetails;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.*;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.ui.Event;
@@ -38,54 +38,82 @@ public class UserDetailsViewModel extends ViewModel {
 
     private static final String TAG = "UserDetailsViewModel";
 
-    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+    private MediatorLiveData<Resource<User>> getUserResult = new MediatorLiveData<>();
 
-    private MutableLiveData<User> user = new MutableLiveData<>();
+    private LiveData<Boolean> isLoading;
 
-    private MutableLiveData<Boolean> isUserShouldBeShown = new MutableLiveData<>();
+    private LiveData<User> user;
+
+    private LiveData<Boolean> isUserShouldBeShown;
 
     private MutableLiveData<Event<String>> openBrowserEvent = new MutableLiveData<>();
 
-    private MutableLiveData<Event<Integer>> showToastEvent = new MutableLiveData<>();
+    private MediatorLiveData<Event<Integer>> showToastEvent = new MediatorLiveData<>();
 
-    private MutableLiveData<Event<Void>> closeActivityEvent = new MutableLiveData<>();
+    private MediatorLiveData<Event<Void>> closeActivityEvent = new MediatorLiveData<>();
 
     public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
-        getUserUseCase.execute(username).observeForever(resource -> {
-            if (resource != null) {
-                if (resource.status == LOADING) {
-                    isLoading.setValue(true);
-                    isUserShouldBeShown.setValue(false);
-                } else if (resource.status == SUCCESS) {
-                    isLoading.setValue(false);
-                    user.setValue(resource.data);
-                    isUserShouldBeShown.setValue(true);
-                } else if (resource.status == ERROR) {
-                    loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
+        getUserResult.addSource(
+                getUserUseCase.execute(username),
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
+                    }
 
-                    isLoading.setValue(false);
-                    showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
-                    closeActivityEvent.setValue(new Event<>(null));
+                    getUserResult.setValue(resource);
                 }
-            }
-        });
+        );
+
+        isLoading = Transformations.map(
+                getUserResult,
+                resource -> resource.status == LOADING
+        );
+
+        user = Transformations.map(
+                getUserResult,
+                resource -> resource.data
+        );
+
+        isUserShouldBeShown = Transformations.map(
+                getUserResult,
+                resource -> resource.status == SUCCESS
+        );
+
+        showToastEvent.addSource(
+                getUserResult,
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
+                        showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
+                    }
+                }
+        );
+
+        closeActivityEvent.addSource(
+                getUserResult,
+                resource -> {
+                    if (resource != null && resource.status == ERROR) {
+                        closeActivityEvent.setValue(new Event<>(null));
+                    }
+                }
+        );
     }
 
     public void onBlogClick() {
-        if (user.getValue() != null) {
-            openBrowserEvent.setValue(new Event<>(user.getValue().getBlog()));
+        User userValue = user.getValue();
+        if (userValue != null) {
+            openBrowserEvent.setValue(new Event<>(userValue.getBlog()));
         }
     }
 
-    public MutableLiveData<Boolean> getIsLoading() {
+    public LiveData<Boolean> getIsLoading() {
         return isLoading;
     }
 
-    public MutableLiveData<User> getUser() {
+    public LiveData<User> getUser() {
         return user;
     }
 
-    public MutableLiveData<Boolean> getIsUserShouldBeShown() {
+    public LiveData<Boolean> getIsUserShouldBeShown() {
         return isUserShouldBeShown;
     }
 
@@ -93,11 +121,11 @@ public class UserDetailsViewModel extends ViewModel {
         return openBrowserEvent;
     }
 
-    public MutableLiveData<Event<Integer>> getShowToastEvent() {
+    public MediatorLiveData<Event<Integer>> getShowToastEvent() {
         return showToastEvent;
     }
 
-    public MutableLiveData<Event<Void>> getCloseActivityEvent() {
+    public MediatorLiveData<Event<Void>> getCloseActivityEvent() {
         return closeActivityEvent;
     }
 }
