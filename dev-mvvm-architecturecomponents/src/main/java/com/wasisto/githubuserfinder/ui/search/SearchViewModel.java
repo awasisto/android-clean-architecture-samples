@@ -52,11 +52,11 @@ public class SearchViewModel extends ViewModel {
 
     private LiveData<List<SearchHistoryItem>> history;
 
-    private LiveData<Boolean> isNoResultsTextShouldBeShown;
+    private LiveData<Boolean> isShouldShowNoResultsText;
 
-    private LiveData<Boolean> isResultShouldBeShown;
+    private LiveData<Boolean> isShouldShowResult;
 
-    private MediatorLiveData<Boolean> isHistoryShouldBeShown = new MediatorLiveData<>();
+    private MediatorLiveData<Boolean> isShouldShowHistory = new MediatorLiveData<>();
 
     private MediatorLiveData<Boolean> isLoading = new MediatorLiveData<>();
 
@@ -95,7 +95,7 @@ public class SearchViewModel extends ViewModel {
                 resource -> resource.data
         );
 
-        isNoResultsTextShouldBeShown = Transformations.map(
+        isShouldShowNoResultsText = Transformations.map(
                 searchUserResult,
                 resource -> {
                     if (resource.status == SUCCESS) {
@@ -106,16 +106,16 @@ public class SearchViewModel extends ViewModel {
                 }
         );
 
-        isResultShouldBeShown = Transformations.map(
+        isShouldShowResult = Transformations.map(
                 searchUserResult,
                 resource -> resource.status == SUCCESS
         );
 
-        isHistoryShouldBeShown.setValue(true);
+        isShouldShowHistory.setValue(true);
 
-        isHistoryShouldBeShown.addSource(
+        isShouldShowHistory.addSource(
                 searchUserResult,
-                resource -> isHistoryShouldBeShown.setValue(false)
+                resource -> isShouldShowHistory.setValue(false)
         );
 
         isLoading.addSource(
@@ -197,16 +197,16 @@ public class SearchViewModel extends ViewModel {
         return history;
     }
 
-    public LiveData<Boolean> getIsNoResultsTextShouldBeShown() {
-        return isNoResultsTextShouldBeShown;
+    public LiveData<Boolean> getIsShouldShowNoResultsText() {
+        return isShouldShowNoResultsText;
     }
 
-    public LiveData<Boolean> getIsResultShouldBeShown() {
-        return isResultShouldBeShown;
+    public LiveData<Boolean> getIsShouldShowResult() {
+        return isShouldShowResult;
     }
 
-    public LiveData<Boolean> getIsHistoryShouldBeShown() {
-        return isHistoryShouldBeShown;
+    public LiveData<Boolean> getIsShouldShowHistory() {
+        return isShouldShowHistory;
     }
 
     public MediatorLiveData<Boolean> getIsLoading() {

@@ -69,14 +69,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:items="@{viewModel.history}"
-                    app:visibleWhen="@{viewModel.isHistoryShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowHistory}" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/resultRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:items="@{viewModel.result.items}"
-                    app:visibleWhen="@{viewModel.isResultShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowResult}" />
             </FrameLayout>
         </LinearLayout>
 
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/no_results"
-            app:visibleWhen="@{viewModel.isNoResultsTextShouldBeShown}" />
+            app:visibleWhen="@{viewModel.isShouldShowNoResultsText}" />
 
         <ProgressBar
             android:layout_width="wrap_content"

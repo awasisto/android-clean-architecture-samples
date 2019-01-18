@@ -49,7 +49,7 @@
                     android:layout_height="136dp"
                     android:layout_marginBottom="16dp"
                     app:imageUrl="@{viewModel.user.avatarUrl}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="24sp"
                     android:text="@{viewModel.user.name}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.login}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.company}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.location}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                     android:textSize="16sp"
                     android:text="@{viewModel.user.blog}"
                     android:onClick="@{() -> viewModel.onBlogClick()}"
-                    app:visibleWhen="@{viewModel.isUserShouldBeShown}" />
+                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
             </LinearLayout>
         </ScrollView>
 
