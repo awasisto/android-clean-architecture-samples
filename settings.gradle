@@ -20,4 +20,4 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvp-dagger-rxjava', ':mvp-kotlin', ':dev-mvvm-architecturecomponents'
+include ':mvp', ':mvp-dagger-rxjava', ':mvp-kotlin', ':mvvm-architecturecomponents'
