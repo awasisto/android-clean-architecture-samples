@@ -41,13 +41,6 @@ All samples have the following basic layers:
 
   This layer contains data access logic such as database connection, API consumption, etc.
 
-The old version
----------------
-
-| Sample                                                                                                                         | Description                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| [old-ver-using-service-layer](https://github.com/awasisto/android-clean-architecture-samples/tree/old-ver-using-service-layer) | A Model-View-Presenter (MVP) architecture sample using service layer. |
-
 License
 -------
 
