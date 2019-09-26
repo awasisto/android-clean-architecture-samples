@@ -22,7 +22,7 @@
 
 package com.wasisto.githubuserfinder.ui.userdetails
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 
 import com.wasisto.githubuserfinder.ui.View
 

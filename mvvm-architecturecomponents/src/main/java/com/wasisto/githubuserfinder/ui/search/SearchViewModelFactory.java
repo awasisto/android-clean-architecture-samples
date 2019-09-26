@@ -22,9 +22,9 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.annotation.NonNull;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;

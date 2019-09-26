@@ -22,7 +22,7 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;

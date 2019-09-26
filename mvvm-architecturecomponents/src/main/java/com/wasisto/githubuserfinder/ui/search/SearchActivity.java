@@ -22,12 +22,12 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;

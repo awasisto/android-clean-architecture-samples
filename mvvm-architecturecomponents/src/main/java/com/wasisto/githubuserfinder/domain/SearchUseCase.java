@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.model.SearchUserResult;

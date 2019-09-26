@@ -22,7 +22,7 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 public interface UseCase<Params, Result> {
 

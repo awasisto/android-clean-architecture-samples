@@ -22,7 +22,7 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.ui.View;

@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import android.databinding.BindingAdapter;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.BindingAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
