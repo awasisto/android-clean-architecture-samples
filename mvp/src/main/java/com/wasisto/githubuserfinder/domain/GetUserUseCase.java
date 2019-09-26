@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
-import com.wasisto.githubuserfinder.data.github.model.User;
+import com.wasisto.githubuserfinder.model.User;
 
 public class GetUserUseCase implements UseCase<String, User> {
 

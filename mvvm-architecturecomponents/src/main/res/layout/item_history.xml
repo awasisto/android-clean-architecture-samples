@@ -24,7 +24,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable name="historyItem" type="com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem" />
+        <variable name="historyItem" type="com.wasisto.githubuserfinder.model.SearchHistoryItem" />
         <variable name="listener" type="com.wasisto.githubuserfinder.ui.search.HistoryItemActionsListener" />
     </data>
 

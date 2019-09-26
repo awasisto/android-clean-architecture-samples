@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 

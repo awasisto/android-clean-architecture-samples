@@ -23,7 +23,7 @@
 package com.wasisto.githubuserfinder.domain
 
 import com.wasisto.githubuserfinder.data.github.GithubDataSource
-import com.wasisto.githubuserfinder.data.github.model.User
+import com.wasisto.githubuserfinder.model.User
 
 class GetUserUseCase(private val githubDataSource: GithubDataSource) : UseCase<String, User> {
 

@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.ui.Presenter;
 
 public interface SearchPresenter extends Presenter {

@@ -24,9 +24,9 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 public class SearchUseCase implements UseCase<String, SearchUserResult> {

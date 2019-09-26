@@ -23,7 +23,7 @@
 package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import io.reactivex.Observable;
 
 import javax.inject.Inject;

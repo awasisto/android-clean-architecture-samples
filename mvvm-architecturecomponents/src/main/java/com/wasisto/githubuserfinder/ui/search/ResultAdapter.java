@@ -28,7 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.databinding.ItemResultBinding;
 
 import java.util.List;

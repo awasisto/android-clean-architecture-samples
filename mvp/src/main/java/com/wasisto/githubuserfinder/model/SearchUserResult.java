@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.data.github.model;
+package com.wasisto.githubuserfinder.model;
 
 import java.util.List;
 

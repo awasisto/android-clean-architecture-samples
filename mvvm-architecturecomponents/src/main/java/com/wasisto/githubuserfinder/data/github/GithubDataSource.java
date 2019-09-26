@@ -24,8 +24,8 @@ package com.wasisto.githubuserfinder.data.github;
 
 import android.arch.lifecycle.LiveData;
 import com.wasisto.githubuserfinder.data.Resource;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
-import com.wasisto.githubuserfinder.data.github.model.User;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.User;
 
 public interface GithubDataSource {
 

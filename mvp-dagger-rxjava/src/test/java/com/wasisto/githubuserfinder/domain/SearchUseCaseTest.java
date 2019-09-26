@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 import io.reactivex.Completable;
 import org.junit.Test;

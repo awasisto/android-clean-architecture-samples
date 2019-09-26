@@ -29,7 +29,7 @@ import android.view.ViewGroup
 
 import com.squareup.picasso.Picasso
 import com.wasisto.githubuserfinder.R
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult
+import com.wasisto.githubuserfinder.model.SearchUserResult
 import kotlinx.android.synthetic.main.item_result.view.*
 
 class ResultAdapter(var data: List<SearchUserResult.Item>) : RecyclerView.Adapter<ResultAdapter.ViewHolder>() {

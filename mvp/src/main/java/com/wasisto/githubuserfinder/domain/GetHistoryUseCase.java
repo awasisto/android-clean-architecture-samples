@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.domain;
 
 import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import java.util.List;
 

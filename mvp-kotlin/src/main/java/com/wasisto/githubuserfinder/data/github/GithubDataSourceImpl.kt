@@ -25,8 +25,8 @@ package com.wasisto.githubuserfinder.data.github
 import android.content.Context
 
 import com.google.gson.GsonBuilder
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult
-import com.wasisto.githubuserfinder.data.github.model.User
+import com.wasisto.githubuserfinder.model.SearchUserResult
+import com.wasisto.githubuserfinder.model.User
 
 import okhttp3.Cache
 import okhttp3.OkHttpClient

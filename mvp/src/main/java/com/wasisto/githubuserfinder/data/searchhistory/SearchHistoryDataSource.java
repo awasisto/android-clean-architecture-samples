@@ -23,7 +23,7 @@
 package com.wasisto.githubuserfinder.data.searchhistory;
 
 import com.wasisto.githubuserfinder.Callback;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import java.util.List;
 

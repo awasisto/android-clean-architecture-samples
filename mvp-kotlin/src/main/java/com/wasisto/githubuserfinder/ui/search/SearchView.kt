@@ -24,8 +24,8 @@ package com.wasisto.githubuserfinder.ui.search
 
 import android.support.annotation.StringRes
 
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem
+import com.wasisto.githubuserfinder.model.SearchUserResult
+import com.wasisto.githubuserfinder.model.SearchHistoryItem
 import com.wasisto.githubuserfinder.ui.View
 
 interface SearchView : View {

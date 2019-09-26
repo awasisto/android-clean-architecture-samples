@@ -22,7 +22,7 @@
 
 package com.wasisto.githubuserfinder.data.searchhistory
 
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem
+import com.wasisto.githubuserfinder.model.SearchHistoryItem
 
 interface SearchHistoryDataSource {
 

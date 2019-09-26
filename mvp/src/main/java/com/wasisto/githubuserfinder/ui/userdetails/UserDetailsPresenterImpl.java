@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.ui.userdetails;
 
 import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.github.model.User;
+import com.wasisto.githubuserfinder.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 

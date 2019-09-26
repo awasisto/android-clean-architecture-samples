@@ -28,8 +28,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
 import dagger.android.support.DaggerAppCompatActivity;
 

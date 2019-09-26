@@ -38,7 +38,7 @@ import android.os.Handler;
 import android.os.Looper;
 import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;
 

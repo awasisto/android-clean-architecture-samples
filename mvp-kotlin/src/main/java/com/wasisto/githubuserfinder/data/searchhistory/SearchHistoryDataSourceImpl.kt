@@ -28,7 +28,7 @@ import android.os.Handler
 import android.os.Looper
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem
+import com.wasisto.githubuserfinder.model.SearchHistoryItem
 
 import java.util.concurrent.Executors
 

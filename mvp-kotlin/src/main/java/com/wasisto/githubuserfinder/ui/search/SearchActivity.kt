@@ -30,9 +30,9 @@ import android.widget.Toast
 
 import com.wasisto.githubuserfinder.R
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult
+import com.wasisto.githubuserfinder.model.SearchUserResult
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem
+import com.wasisto.githubuserfinder.model.SearchHistoryItem
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl
 

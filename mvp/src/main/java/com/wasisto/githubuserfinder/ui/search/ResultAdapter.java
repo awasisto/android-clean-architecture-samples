@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
 
 import java.util.List;
 

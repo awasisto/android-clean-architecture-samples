@@ -28,7 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.wasisto.githubuserfinder.R
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem
+import com.wasisto.githubuserfinder.model.SearchHistoryItem
 import kotlinx.android.synthetic.main.item_history.view.*
 
 class HistoryAdapter(var data: List<SearchHistoryItem>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {

@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
-import com.wasisto.githubuserfinder.data.github.model.User;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.User;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

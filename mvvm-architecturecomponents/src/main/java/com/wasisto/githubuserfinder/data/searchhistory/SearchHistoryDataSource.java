@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.data.searchhistory;
 
 import android.arch.lifecycle.LiveData;
 import com.wasisto.githubuserfinder.data.Resource;
-import com.wasisto.githubuserfinder.data.searchhistory.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import java.util.List;
 

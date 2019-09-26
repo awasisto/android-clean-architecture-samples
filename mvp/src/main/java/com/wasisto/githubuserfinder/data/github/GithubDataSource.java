@@ -23,8 +23,8 @@
 package com.wasisto.githubuserfinder.data.github;
 
 import com.wasisto.githubuserfinder.Callback;
-import com.wasisto.githubuserfinder.data.github.model.SearchUserResult;
-import com.wasisto.githubuserfinder.data.github.model.User;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.User;
 
 public interface GithubDataSource {
 
