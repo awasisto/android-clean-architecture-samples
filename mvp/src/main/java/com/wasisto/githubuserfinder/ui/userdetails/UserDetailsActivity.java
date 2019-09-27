@@ -31,7 +31,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
@@ -102,7 +103,11 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
     @Override
     public void showAvatar(String avatarUrl) {
         avatarImageView.setVisibility(View.VISIBLE);
-        Picasso.get().load(avatarUrl).placeholder(R.color.colorAccent).into(avatarImageView);
+
+        Glide.with(this)
+                .load(avatarUrl)
+                .placeholder(R.color.colorAccent)
+                .into(avatarImageView);
     }
 
     @Override

@@ -25,7 +25,8 @@ package com.wasisto.githubuserfinder.ui;
 import androidx.databinding.BindingAdapter;
 import android.view.View;
 import android.widget.ImageView;
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
 import com.wasisto.githubuserfinder.R;
 
 public class BindingAdapters {
@@ -41,6 +42,9 @@ public class BindingAdapters {
 
     @BindingAdapter("imageUrl")
     public static void imageUrl(ImageView imageView, String imageUrl) {
-        Picasso.get().load(imageUrl).placeholder(R.color.colorAccent).into(imageView);
+        Glide.with(imageView)
+                .load(imageUrl)
+                .placeholder(R.color.colorAccent)
+                .into(imageView);
     }
 }

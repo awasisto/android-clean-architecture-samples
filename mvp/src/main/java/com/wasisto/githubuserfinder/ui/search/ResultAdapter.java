@@ -29,7 +29,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 
@@ -56,7 +57,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SearchUserResult.Item resultItem = data.get(position);
 
-        Picasso.get().load(resultItem.getAvatarUrl()).placeholder(R.color.colorAccent).into(holder.avatarImageView);
+        Glide.with(holder.avatarImageView)
+                .load(resultItem.getAvatarUrl())
+                .placeholder(R.color.colorAccent)
+                .into(holder.avatarImageView);
 
         holder.usernameTextView.setText(resultItem.getLogin());
 
