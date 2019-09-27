@@ -133,12 +133,12 @@ class SearchViewModel(
         }
     }
 
-    fun onResultItemClick(username: String) {
-        openUserDetailsActivityEvent.value = Event(username)
+    fun onResultItemClick(resultItem: SearchUserResult.Item) {
+        openUserDetailsActivityEvent.value = Event(resultItem.login)
     }
 
-    fun onHistoryItemClick(q: String) {
-        query.value = q
+    fun onHistoryItemClick(historyItem: SearchHistoryItem) {
+        query.value = historyItem.query
         onSearch()
     }
 }
