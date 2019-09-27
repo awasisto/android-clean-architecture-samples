@@ -6,12 +6,13 @@ A project providing demonstrations on how to architect an Android app using Uncl
 Samples
 -------
 
-| Sample                                                     | Description                                                                                                                                             |
-| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [mvp](mvp)                                                 | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                                                                 |
-| [mvp-kotlin](mvp-kotlin)                                   | A clean Model-View-Presenter (MVP) architecture sample written in Kotlin.                                                                               |
-| [mvp-dagger-rxjava](mvp-dagger-rxjava)                     | A clean Model-View-Presenter (MVP) architecture sample written in Java. Uses Dagger 2 for dependency injection and RxJava 2.0 to implement concurrency. |
-| [mvvm-architecturecomponents](mvvm-architecturecomponents) | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.                                          |
+| Sample                                                                   | Description                                                                                                                                             |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [mvp](mvp)                                                               | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                                                                 |
+| [mvp-kotlin](mvp-kotlin)                                                 | A clean Model-View-Presenter (MVP) architecture sample written in Kotlin.                                                                               |
+| [mvp-dagger-rxjava](mvp-dagger-rxjava)                                   | A clean Model-View-Presenter (MVP) architecture sample written in Java. Uses Dagger 2 for dependency injection and RxJava 2.0 to implement concurrency. |
+| [mvvm-architecturecomponents](mvvm-architecturecomponents)               | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.                                          |
+| [mvvm-kotlin-architecturecomponents](mvvm-kotlin-architecturecomponents) | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. Uses Android Architecture Components.                                        |
 
 Sample app overview
 -------------------
@@ -39,7 +40,7 @@ All samples have the following basic layers:
 
 - Data
 
-  This layer contains data access logic such as database connection, API consumption, etc.
+  This layer contains data access logic such as database connection, REST API call, etc.
 
 License
 -------
