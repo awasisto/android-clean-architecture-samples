@@ -24,7 +24,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="android.view.View" />
         <variable name="viewModel" type="com.wasisto.githubuserfinder.ui.userdetails.UserDetailsViewModel" />
     </data>
 
