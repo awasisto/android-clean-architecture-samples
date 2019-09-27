@@ -85,10 +85,8 @@ class UserDetailsActivity : AppCompatActivity() {
                 }
             })
 
-            viewModel.closeActivityEvent.observe(this, Observer { event ->
-                if (!event.hasBeenHandled) {
-                    finish()
-                }
+            viewModel.closeActivityEvent.observe(this, Observer {
+                finish()
             })
         }
     }

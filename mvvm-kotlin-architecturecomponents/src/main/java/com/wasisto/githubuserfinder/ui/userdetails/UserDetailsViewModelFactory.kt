@@ -25,7 +25,6 @@ package com.wasisto.githubuserfinder.ui.userdetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-import com.wasisto.githubuserfinder.data.github.GithubDataSource
 import com.wasisto.githubuserfinder.domain.GetUserUseCase
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper
 
