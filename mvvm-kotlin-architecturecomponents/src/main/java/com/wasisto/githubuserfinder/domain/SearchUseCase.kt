@@ -45,7 +45,7 @@ class SearchUseCase(
 
         try {
             searchHistoryDataSource.add(searchHistoryItem)
-            loggingHelper.info(TAG, "Query added to the search history")
+            loggingHelper.debug(TAG, "Query added to the search history")
         } catch (error: Throwable) {
             loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error)
         }

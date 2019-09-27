@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,6 +54,15 @@ public class SearchUserResult {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchUserResult{" +
+                "totalCount=" + totalCount +
+                ", incompleteResults=" + incompleteResults +
+                ", items=" + items +
+                '}';
     }
 
     public static class Item {
@@ -186,6 +195,25 @@ public class SearchUserResult {
 
         public void setOrganizationsUrl(String organizationsUrl) {
             this.organizationsUrl = organizationsUrl;
+        }
+
+        @Override
+        public String toString() {
+            return "Item{" +
+                    "login='" + login + '\'' +
+                    ", id=" + id +
+                    ", nodeId='" + nodeId + '\'' +
+                    ", avatarUrl='" + avatarUrl + '\'' +
+                    ", gravatarId='" + gravatarId + '\'' +
+                    ", url='" + url + '\'' +
+                    ", htmlUrl='" + htmlUrl + '\'' +
+                    ", followersUrl='" + followersUrl + '\'' +
+                    ", followingUrl='" + followingUrl + '\'' +
+                    ", gistsUrl='" + gistsUrl + '\'' +
+                    ", starredUrl='" + starredUrl + '\'' +
+                    ", subscriptionsUrl='" + subscriptionsUrl + '\'' +
+                    ", organizationsUrl='" + organizationsUrl + '\'' +
+                    '}';
         }
     }
 }

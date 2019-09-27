@@ -55,7 +55,7 @@ public class SearchUseCase extends UseCase<String, SearchUserResult> {
 
         try {
             searchHistoryDataSource.add(searchHistoryItem);
-            loggingHelper.info(TAG, "Query added to the search history");
+            loggingHelper.debug(TAG, "Query added to the search history");
         } catch (Throwable error) {
             loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
         }

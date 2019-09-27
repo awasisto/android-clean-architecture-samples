@@ -57,7 +57,9 @@ class UserDetailsViewModel(
 
     init {
         getUserResult.addSource(getUserUseCase.executeAsync(username)) { result ->
-            if (result is UseCase.Result.Error) {
+            if (result is UseCase.Result.Success) {
+                loggingHelper.debug(TAG, "result.data: ${result.data}")
+            } else if (result is UseCase.Result.Error) {
                 loggingHelper.warn(TAG, "An error occurred while getting a user", result.error)
             }
 

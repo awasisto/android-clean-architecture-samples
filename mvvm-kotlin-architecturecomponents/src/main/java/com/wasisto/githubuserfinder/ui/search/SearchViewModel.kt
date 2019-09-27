@@ -67,7 +67,9 @@ class SearchViewModel(
 
     init {
         getHistoryResult.addSource(getHistoryUseCase.executeAsync(Unit)) { result ->
-            if (result is UseCase.Result.Error) {
+            if (result is UseCase.Result.Success) {
+                loggingHelper.debug(TAG, "result.data: ${result.data}")
+            } else if (result is UseCase.Result.Error) {
                 loggingHelper.warn(TAG, "An error occurred while getting the search user history", result.error)
             }
 
@@ -127,6 +129,12 @@ class SearchViewModel(
                 showToastEvent.value = Event(R.string.enter_search_query)
             } else {
                 searchUserResult.addSource(searchUseCase.executeAsync(q)) { result ->
+                    if (result is UseCase.Result.Success) {
+                        loggingHelper.debug(TAG, "result.data: ${result.data}")
+                    } else if (result is UseCase.Result.Error) {
+                        loggingHelper.warn(TAG, "An error occurred while searching users", result.error)
+                    }
+
                     searchUserResult.value = result
                 }
             }

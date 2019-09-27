@@ -63,6 +63,8 @@ public class SearchPresenterImpl implements SearchPresenter {
         getHistoryUseCase.executeAsync(null, new UseCase.Callback<List<SearchHistoryItem>>() {
             @Override
             public void onSuccess(List<SearchHistoryItem> history) {
+                loggingHelper.debug(TAG, String.format("history: %s", history));
+
                 view.hideLoadingIndicator();
 
                 Collections.sort(history, (item1, item2) -> Integer.compare(item2.getId(), item1.getId()));
@@ -71,7 +73,7 @@ public class SearchPresenterImpl implements SearchPresenter {
 
             @Override
             public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting the search user history", error);
+                loggingHelper.warn(TAG, "An error occurred while getting the search user history", error);
 
                 view.hideLoadingIndicator();
 
@@ -109,6 +111,8 @@ public class SearchPresenterImpl implements SearchPresenter {
             searchUseCase.executeAsync(query, new UseCase.Callback<SearchUserResult>() {
                 @Override
                 public void onSuccess(SearchUserResult result) {
+                    loggingHelper.debug(TAG, String.format("result: %s", result));
+
                     view.hideLoadingIndicator();
 
                     if (!result.getItems().isEmpty()) {
@@ -120,7 +124,7 @@ public class SearchPresenterImpl implements SearchPresenter {
 
                 @Override
                 public void onError(Throwable error) {
-                    loggingHelper.error(TAG, "An error occurred while searching users", error);
+                    loggingHelper.warn(TAG, "An error occurred while searching users", error);
 
                     view.hideLoadingIndicator();
 

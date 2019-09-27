@@ -72,8 +72,10 @@ public class SearchViewModel extends ViewModel {
         getHistoryResult.addSource(
                 getHistoryUseCase.executeAsync(null),
                 result -> {
-                    if (result.status == UseCase.Result.Status.ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while getting the search user history", result.error);
+                    if (result.status == UseCase.Result.Status.SUCCESS) {
+                        loggingHelper.debug(TAG, String.format("result.data: %s", result.data));
+                    } else if (result.status == UseCase.Result.Status.ERROR) {
+                        loggingHelper.warn(TAG, "An error occurred while getting the search user history", result.error);
                     }
 
                     getHistoryResult.setValue(result);
@@ -151,8 +153,10 @@ public class SearchViewModel extends ViewModel {
                 searchUserResult.addSource(
                         searchUseCase.executeAsync(q),
                         result -> {
-                            if (result.status == UseCase.Result.Status.ERROR) {
-                                loggingHelper.error(TAG, "An error occurred while searching users", result.error);
+                            if (result.status == UseCase.Result.Status.SUCCESS) {
+                                loggingHelper.debug(TAG, String.format("result.data: %s", result.data));
+                            } else if (result.status == UseCase.Result.Status.ERROR) {
+                                loggingHelper.warn(TAG, "An error occurred while searching users", result.error);
                             }
 
                             searchUserResult.setValue(result);

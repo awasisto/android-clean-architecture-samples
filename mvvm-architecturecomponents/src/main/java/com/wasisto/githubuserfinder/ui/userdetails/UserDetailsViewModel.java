@@ -52,8 +52,10 @@ public class UserDetailsViewModel extends ViewModel {
         getUserResult.addSource(
                 getUserUseCase.executeAsync(username),
                 result -> {
-                    if (result.status == UseCase.Result.Status.ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while getting a user", result.error);
+                    if (result.status == UseCase.Result.Status.SUCCESS) {
+                        loggingHelper.debug(TAG, String.format("result.data: %s", result.data));
+                    } else if (result.status == UseCase.Result.Status.ERROR) {
+                        loggingHelper.warn(TAG, "An error occurred while getting a user", result.error);
                     }
 
                     getUserResult.setValue(result);

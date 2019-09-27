@@ -62,6 +62,8 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
         getUserUseCase.executeAsync(username, new UseCase.Callback<User>() {
             @Override
             public void onSuccess(User user) {
+                loggingHelper.debug(TAG, String.format("user: %s", user));
+
                 view.hideLoadingIndicator();
 
                 view.showAvatar(user.getAvatarUrl());
@@ -86,7 +88,7 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
 
             @Override
             public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting a user", error);
+                loggingHelper.warn(TAG, "An error occurred while getting a user", error);
 
                 view.hideLoadingIndicator();
 
@@ -103,13 +105,15 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
         getUserUseCase.executeAsync(username, new UseCase.Callback<User>() {
             @Override
             public void onSuccess(User user) {
+                loggingHelper.debug(TAG, String.format("user: %s", user));
+
                 view.hideLoadingIndicator();
                 view.openBrowser(user.getBlog());
             }
 
             @Override
             public void onError(Throwable error) {
-                loggingHelper.error(TAG, "An error occurred while getting a user", error);
+                loggingHelper.warn(TAG, "An error occurred while getting a user", error);
 
                 view.hideLoadingIndicator();
 

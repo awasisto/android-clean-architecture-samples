@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,5 +42,13 @@ public class SearchHistoryItem {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    @Override
+    public String toString() {
+        return "SearchHistoryItem{" +
+                "id=" + id +
+                ", query='" + query + '\'' +
+                '}';
     }
 }
