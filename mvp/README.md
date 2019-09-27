@@ -28,17 +28,18 @@ This sample has the following layers:
 
   - View
 
-    This layer is passive, updated by the presenter, interacts with the user and forwards all user interaction to the
-    presenter.
+    This layer is passive, updated by the presenter, interacts with the user and forwards all user
+    interaction to the presenter.
 
   - Presenter
 
-    This layer contains presentation logic such as updating UI elements in the view, formatting the data, etc.
-    It accesses the domain layer if it needs to read or modify some data.
+    This layer contains presentation logic such as updating UI elements in the view, formatting the
+    data, etc. It accesses the domain layer if it needs to read or modify some data.
 
 - Domain
 
-  This layer contains business logic such accessing data sources, data processing, etc.
+  This layer contains business logic such as accessing data sources and combining them, data
+  processing, etc.
 
 - Data
 

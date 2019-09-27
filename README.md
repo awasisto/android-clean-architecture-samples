@@ -34,7 +34,8 @@ All samples have the following basic layers:
 
 - Domain
 
-  This layer contains business logic such accessing data sources, data processing, etc.
+  This layer contains business logic such as accessing data sources and combining them, data
+  processing, etc.
 
 - Data
 

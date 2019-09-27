@@ -29,17 +29,18 @@ This sample has the following layers:
 
   - View
 
-    This layer is passive, updated by the presenter, interacts with the user and forwards all user
-    interaction to the presenter.
+    This layer displays the data provided by the viewmodel using data binding and forwards all user
+    interaction to the viewmodel.
 
   - ViewModel
 
     This layer is responsible for preparing and managing the data to be accessed and displayed by
-    the view layer. It accesses the data layer if it needs to read or modify some data.
+    the view layer. It accesses the domain layer if it needs to read or modify some data.
 
 - Domain
 
-  This layer contains business logic such accessing data sources, data processing, etc.
+  This layer contains business logic such as accessing data sources and combining them, data
+  processing, etc.
 
 - Data
 
