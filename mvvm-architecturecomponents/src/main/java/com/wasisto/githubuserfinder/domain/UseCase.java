@@ -27,10 +27,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
-
 public abstract class UseCase<P, R> {
 
     private ExecutorProvider executorProvider;
@@ -56,6 +52,12 @@ public abstract class UseCase<P, R> {
 
     public static class Result<T> {
 
+        public enum Status {
+            SUCCESS,
+            ERROR,
+            LOADING
+        }
+
         public Status status;
 
         public T data;
@@ -69,21 +71,15 @@ public abstract class UseCase<P, R> {
         }
 
         public static <T> Result<T> success(T data) {
-            return new Result<>(SUCCESS, data, null);
+            return new Result<>(Status.SUCCESS, data, null);
         }
 
         public static <T> Result<T> error(Throwable error) {
-            return new Result<>(ERROR, null, error);
+            return new Result<>(Status.ERROR, null, error);
         }
 
         public static <T> Result<T> loading() {
-            return new Result<>(LOADING, null, null);
-        }
-
-        public enum Status {
-            SUCCESS,
-            ERROR,
-            LOADING
+            return new Result<>(Status.LOADING, null, null);
         }
     }
 }

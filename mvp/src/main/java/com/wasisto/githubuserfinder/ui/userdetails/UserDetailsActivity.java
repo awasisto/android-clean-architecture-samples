@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.net.Uri;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,11 +37,6 @@ import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
-
-import static android.content.Intent.ACTION_VIEW;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class UserDetailsActivity extends AppCompatActivity implements UserDetailsView {
 
@@ -95,83 +91,83 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
 
     @Override
     public void showLoadingIndicator() {
-        loadingIndicator.setVisibility(VISIBLE);
+        loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoadingIndicator() {
-        loadingIndicator.setVisibility(GONE);
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
     public void showAvatar(String avatarUrl) {
-        avatarImageView.setVisibility(VISIBLE);
+        avatarImageView.setVisibility(View.VISIBLE);
         Picasso.get().load(avatarUrl).placeholder(R.color.colorAccent).into(avatarImageView);
     }
 
     @Override
     public void hideAvatar() {
-        avatarImageView.setVisibility(GONE);
+        avatarImageView.setVisibility(View.GONE);
     }
 
     @Override
     public void showName(String name) {
-        nameTextView.setVisibility(VISIBLE);
+        nameTextView.setVisibility(View.VISIBLE);
         nameTextView.setText(name);
     }
 
     @Override
     public void hideName() {
-        nameTextView.setVisibility(GONE);
+        nameTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void showUsername(String username) {
-        usernameTextView.setVisibility(VISIBLE);
+        usernameTextView.setVisibility(View.VISIBLE);
         usernameTextView.setText(username);
     }
 
     @Override
     public void hideUsername() {
-        usernameTextView.setVisibility(GONE);
+        usernameTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void showCompany(String company) {
-        companyTextView.setVisibility(VISIBLE);
+        companyTextView.setVisibility(View.VISIBLE);
         companyTextView.setText(company);
     }
 
     @Override
     public void hideCompany() {
-        companyTextView.setVisibility(GONE);
+        companyTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void showLocation(String location) {
-        locationTextView.setVisibility(VISIBLE);
+        locationTextView.setVisibility(View.VISIBLE);
         locationTextView.setText(location);
     }
 
     @Override
     public void hideLocation() {
-        locationTextView.setVisibility(GONE);
+        locationTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void showBlog(String blog) {
-        blogTextView.setVisibility(VISIBLE);
+        blogTextView.setVisibility(View.VISIBLE);
         blogTextView.setText(blog);
     }
 
     @Override
     public void hideBlog() {
-        blogTextView.setVisibility(GONE);
+        blogTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void openBrowser(String uri) {
-        Intent intent = new Intent(ACTION_VIEW);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(uri));
 
         startActivity(intent);
@@ -179,7 +175,7 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
 
     @Override
     public void showToast(int resId) {
-        Toast.makeText(this, resId, LENGTH_SHORT).show();
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 
     @Override

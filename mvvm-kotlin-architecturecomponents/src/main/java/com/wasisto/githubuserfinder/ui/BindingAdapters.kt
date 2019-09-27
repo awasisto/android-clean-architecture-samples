@@ -27,13 +27,11 @@ import android.view.View
 import android.widget.ImageView
 import com.wasisto.githubuserfinder.R
 
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import com.bumptech.glide.Glide
 
 @BindingAdapter("goneUnless")
 fun goneUnless(view: View, visible: Boolean) {
-    view.visibility = if (visible) VISIBLE else GONE
+    view.visibility = if (visible) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("imageUrl")

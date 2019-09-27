@@ -28,17 +28,14 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 public class BindingAdapters {
 
     @BindingAdapter("goneUnless")
     public static void goneUnless(View view, Boolean visible) {
         if (visible != null && visible) {
-            view.setVisibility(VISIBLE);
+            view.setVisibility(View.VISIBLE);
         } else {
-            view.setVisibility(GONE);
+            view.setVisibility(View.GONE);
         }
     }
 

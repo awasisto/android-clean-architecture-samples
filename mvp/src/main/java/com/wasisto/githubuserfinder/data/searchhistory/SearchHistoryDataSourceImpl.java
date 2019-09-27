@@ -33,8 +33,6 @@ import java.util.List;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
-import static android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE;
-
 public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
 
     private static volatile SearchHistoryDataSourceImpl instance;
@@ -91,7 +89,6 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
 
-        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
-                CONFLICT_REPLACE);
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
     }
 }

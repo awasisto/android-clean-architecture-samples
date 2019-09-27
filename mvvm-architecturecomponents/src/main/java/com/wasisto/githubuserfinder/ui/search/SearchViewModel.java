@@ -34,10 +34,6 @@ import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 import java.util.List;
 
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
-
 public class SearchViewModel extends ViewModel {
 
     private static final String TAG = "SearchViewModel";
@@ -76,7 +72,7 @@ public class SearchViewModel extends ViewModel {
         getHistoryResult.addSource(
                 getHistoryUseCase.executeAsync(null),
                 result -> {
-                    if (result.status == ERROR) {
+                    if (result.status == UseCase.Result.Status.ERROR) {
                         loggingHelper.error(TAG, "An error occurred while getting the search user history", result.error);
                     }
 
@@ -97,7 +93,7 @@ public class SearchViewModel extends ViewModel {
         shouldShowNoResultsText = Transformations.map(
                 searchUserResult,
                 result -> {
-                    if (result.status == SUCCESS) {
+                    if (result.status == UseCase.Result.Status.SUCCESS) {
                         return result.data.getTotalCount() == 0;
                     } else {
                         return false;
@@ -107,7 +103,7 @@ public class SearchViewModel extends ViewModel {
 
         shouldShowResult = Transformations.map(
                 searchUserResult,
-                result -> result.status == SUCCESS
+                result -> result.status == UseCase.Result.Status.SUCCESS
         );
 
         shouldShowHistory.setValue(true);
@@ -119,18 +115,18 @@ public class SearchViewModel extends ViewModel {
 
         isLoading.addSource(
                 searchUserResult,
-                result -> isLoading.setValue(result.status == LOADING)
+                result -> isLoading.setValue(result.status == UseCase.Result.Status.LOADING)
         );
 
         isLoading.addSource(
                 getHistoryResult,
-                result -> isLoading.setValue(result.status == LOADING)
+                result -> isLoading.setValue(result.status == UseCase.Result.Status.LOADING)
         );
 
         showToastEvent.addSource(
                 searchUserResult,
                 result -> {
-                    if (result.status == ERROR) {
+                    if (result.status == UseCase.Result.Status.ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -139,7 +135,7 @@ public class SearchViewModel extends ViewModel {
         showToastEvent.addSource(
                 getHistoryResult,
                 result -> {
-                    if (result.status == ERROR) {
+                    if (result.status == UseCase.Result.Status.ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -155,7 +151,7 @@ public class SearchViewModel extends ViewModel {
                 searchUserResult.addSource(
                         searchUseCase.executeAsync(q),
                         result -> {
-                            if (result.status == ERROR) {
+                            if (result.status == UseCase.Result.Status.ERROR) {
                                 loggingHelper.error(TAG, "An error occurred while searching users", result.error);
                             }
 

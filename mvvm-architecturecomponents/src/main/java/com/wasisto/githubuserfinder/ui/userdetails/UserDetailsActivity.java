@@ -36,9 +36,6 @@ import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
-import static android.content.Intent.ACTION_VIEW;
-import static android.widget.Toast.LENGTH_SHORT;
-
 public class UserDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_USERNAME = "username";
@@ -69,7 +66,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         viewModel.getOpenBrowserEvent().observe(this, event -> {
             if (!event.hasBeenHandled()) {
-                Intent intent = new Intent(ACTION_VIEW);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(event.getContentIfNotHandled()));
 
                 startActivity(intent);
@@ -78,7 +75,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
         viewModel.getShowToastEvent().observe(this, event -> {
             if (!event.hasBeenHandled()) {
-                Toast.makeText(this, event.getContentIfNotHandled(), LENGTH_SHORT).show();
+                Toast.makeText(this, event.getContentIfNotHandled(), Toast.LENGTH_SHORT).show();
             }
         });
 

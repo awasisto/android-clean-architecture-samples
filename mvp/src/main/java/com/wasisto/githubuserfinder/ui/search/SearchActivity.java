@@ -27,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.View;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
@@ -41,10 +43,6 @@ import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class SearchActivity extends AppCompatActivity implements SearchView {
 
@@ -109,12 +107,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void showLoadingIndicator() {
-        loadingIndicator.setVisibility(VISIBLE);
+        loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoadingIndicator() {
-        loadingIndicator.setVisibility(GONE);
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
@@ -124,7 +122,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void showResultItems(List<SearchUserResult.Item> resultItems) {
-        resultRecyclerView.setVisibility(VISIBLE);
+        resultRecyclerView.setVisibility(View.VISIBLE);
 
         resultAdapter.setData(resultItems);
         resultAdapter.notifyDataSetChanged();
@@ -132,12 +130,12 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void hideResultItems() {
-        resultRecyclerView.setVisibility(GONE);
+        resultRecyclerView.setVisibility(View.GONE);
     }
 
     @Override
     public void showHistory(List<SearchHistoryItem> history) {
-        historyRecyclerView.setVisibility(VISIBLE);
+        historyRecyclerView.setVisibility(View.VISIBLE);
 
         historyAdapter.setData(history);
         historyAdapter.notifyDataSetChanged();
@@ -145,17 +143,17 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void hideHistory() {
-        historyRecyclerView.setVisibility(GONE);
+        historyRecyclerView.setVisibility(View.GONE);
     }
 
     @Override
     public void showNoResultsText() {
-        noResultsTextView.setVisibility(VISIBLE);
+        noResultsTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideNoResultsText() {
-        noResultsTextView.setVisibility(GONE);
+        noResultsTextView.setVisibility(View.GONE);
     }
 
     @Override
@@ -168,6 +166,6 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void showToast(int resId) {
-        Toast.makeText(this, resId, LENGTH_SHORT).show();
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 }

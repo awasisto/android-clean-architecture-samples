@@ -32,7 +32,6 @@ import com.wasisto.githubuserfinder.R
 import com.wasisto.githubuserfinder.databinding.ActivitySearchBinding
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity
 
-import android.widget.Toast.LENGTH_SHORT
 import androidx.lifecycle.Observer
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl
@@ -82,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
 
         viewModel.showToastEvent.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { resId ->
-                Toast.makeText(this@SearchActivity, resId, LENGTH_SHORT).show()
+                Toast.makeText(this@SearchActivity, resId, Toast.LENGTH_SHORT).show()
             }
         })
     }

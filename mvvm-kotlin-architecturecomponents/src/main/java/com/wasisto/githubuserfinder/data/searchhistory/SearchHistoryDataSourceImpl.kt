@@ -24,11 +24,11 @@ package com.wasisto.githubuserfinder.data.searchhistory
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry
 import com.wasisto.githubuserfinder.model.SearchHistoryItem
 
-import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import android.provider.BaseColumns
 
 class SearchHistoryDataSourceImpl private constructor(context: Context) : SearchHistoryDataSource {
@@ -73,6 +73,6 @@ class SearchHistoryDataSourceImpl private constructor(context: Context) : Search
         val contentValues = ContentValues()
         contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.query)
 
-        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues, CONFLICT_REPLACE)
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_REPLACE)
     }
 }

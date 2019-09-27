@@ -33,8 +33,6 @@ import com.wasisto.githubuserfinder.R
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl
 import com.wasisto.githubuserfinder.databinding.ActivityUserDetailsBinding
 
-import android.content.Intent.ACTION_VIEW
-import android.widget.Toast.LENGTH_SHORT
 import com.wasisto.githubuserfinder.domain.GetUserUseCase
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl
@@ -74,7 +72,7 @@ class UserDetailsActivity : AppCompatActivity() {
 
             viewModel.openBrowserEvent.observe(this, Observer { event ->
                 event.getContentIfNotHandled()?.let { url ->
-                    val intent = Intent(ACTION_VIEW)
+                    val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(url)
 
                     startActivity(intent)
@@ -83,7 +81,7 @@ class UserDetailsActivity : AppCompatActivity() {
 
             viewModel.showToastEvent.observe(this, Observer { event ->
                 event.getContentIfNotHandled()?.let { resId ->
-                    Toast.makeText(this, resId, LENGTH_SHORT).show()
+                    Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
                 }
             })
 

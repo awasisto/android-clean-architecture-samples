@@ -23,6 +23,7 @@
 package com.wasisto.githubuserfinder.data.github
 
 import android.content.Context
+import com.google.gson.FieldNamingPolicy
 
 import com.google.gson.GsonBuilder
 
@@ -31,11 +32,10 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-import com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES
 import com.wasisto.githubuserfinder.model.SearchUserResult
 import com.wasisto.githubuserfinder.model.User
 import java.lang.RuntimeException
-import java.util.concurrent.TimeUnit.SECONDS
+import java.util.concurrent.TimeUnit
 
 class GithubDataSourceImpl private constructor(context: Context) : GithubDataSource {
 
@@ -62,12 +62,12 @@ class GithubDataSourceImpl private constructor(context: Context) : GithubDataSou
         val cache = Cache(context.cacheDir, CACHE_SIZE_BYTES)
 
         val okHttpClient = OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT_SECONDS, SECONDS)
+                .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .cache(cache)
                 .build()
 
         val gson = GsonBuilder()
-                .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
 
         val retrofit = Retrofit.Builder()

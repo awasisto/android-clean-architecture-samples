@@ -27,7 +27,6 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import android.widget.*;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
@@ -38,10 +37,6 @@ import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
-
-import java.util.ArrayList;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -84,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
 
         viewModel.getShowToastEvent().observe(this, event -> {
             if (!event.hasBeenHandled()) {
-                Toast.makeText(SearchActivity.this, event.getContentIfNotHandled(), LENGTH_SHORT).show();
+                Toast.makeText(SearchActivity.this, event.getContentIfNotHandled(), Toast.LENGTH_SHORT).show();
             }
         });
     }

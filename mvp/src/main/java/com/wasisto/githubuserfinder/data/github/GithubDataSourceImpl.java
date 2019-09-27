@@ -23,18 +23,20 @@
 package com.wasisto.githubuserfinder.data.github;
 
 import android.content.Context;
+
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;
+
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class GithubDataSourceImpl implements GithubDataSource {
 
@@ -52,12 +54,12 @@ public class GithubDataSourceImpl implements GithubDataSource {
         Cache cache = new Cache(context.getCacheDir(), CACHE_SIZE_BYTES);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(CONNECT_TIMEOUT_SECONDS, SECONDS)
+                .connectTimeout(CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .cache(cache)
                 .build();
 
         Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()

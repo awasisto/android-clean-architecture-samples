@@ -22,8 +22,7 @@
 
 package com.wasisto.githubuserfinder.ui.search
 
-import android.view.View.GONE
-import android.view.View.VISIBLE
+import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wasisto.githubuserfinder.model.SearchHistoryItem
@@ -38,9 +37,9 @@ fun resultItems(recyclerView: RecyclerView,
     }
 
     if (resultItems == null) {
-        recyclerView.visibility = GONE
+        recyclerView.visibility = View.GONE
     } else {
-        recyclerView.visibility = VISIBLE
+        recyclerView.visibility = View.VISIBLE
         resultAdapter.data = resultItems
         resultAdapter.notifyDataSetChanged()
     }
@@ -55,9 +54,9 @@ fun historyItems(recyclerView: RecyclerView,
     }
 
     if (historyItems == null) {
-        recyclerView.visibility = GONE
+        recyclerView.visibility = View.GONE
     } else {
-        recyclerView.visibility = VISIBLE
+        recyclerView.visibility = View.VISIBLE
         historyAdapter.data = historyItems
         historyAdapter.notifyDataSetChanged()
     }

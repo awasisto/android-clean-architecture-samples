@@ -30,10 +30,6 @@ import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.ui.Event;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
-import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
-
 public class UserDetailsViewModel extends ViewModel {
 
     private static final String TAG = "UserDetailsViewModel";
@@ -56,7 +52,7 @@ public class UserDetailsViewModel extends ViewModel {
         getUserResult.addSource(
                 getUserUseCase.executeAsync(username),
                 resource -> {
-                    if (resource.status == ERROR) {
+                    if (resource.status == UseCase.Result.Status.ERROR) {
                         loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
                     }
 
@@ -66,7 +62,7 @@ public class UserDetailsViewModel extends ViewModel {
 
         isLoading = Transformations.map(
                 getUserResult,
-                resource -> resource.status == LOADING
+                resource -> resource.status == UseCase.Result.Status.LOADING
         );
 
         user = Transformations.map(
@@ -76,13 +72,13 @@ public class UserDetailsViewModel extends ViewModel {
 
         shouldShowUserDetails = Transformations.map(
                 getUserResult,
-                resource -> resource.status == SUCCESS
+                resource -> resource.status == UseCase.Result.Status.SUCCESS
         );
 
         showToastEvent.addSource(
                 getUserResult,
                 resource -> {
-                    if (resource.status == ERROR) {
+                    if (resource.status == UseCase.Result.Status.ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -91,7 +87,7 @@ public class UserDetailsViewModel extends ViewModel {
         closeActivityEvent.addSource(
                 getUserResult,
                 resource -> {
-                    if (resource.status == ERROR) {
+                    if (resource.status == UseCase.Result.Status.ERROR) {
                         closeActivityEvent.setValue(new Event<>(null));
                     }
                 }
