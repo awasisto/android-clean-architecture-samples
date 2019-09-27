@@ -22,19 +22,13 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import android.content.Context;
-import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -84,50 +78,24 @@ public class GithubDataSourceImpl implements GithubDataSource {
     }
 
     @Override
-    public LiveData<Resource<SearchUserResult>> searchUser(String query) {
-        MutableLiveData<Resource<SearchUserResult>> liveData = new MutableLiveData<>();
-        liveData.setValue(Resource.loading());
-        githubService.searchUser(query).enqueue(new Callback<SearchUserResult>() {
-            @Override
-            public void onResponse(@NonNull Call<SearchUserResult> call,
-                                   @NonNull Response<SearchUserResult> response) {
-                try {
-                    SearchUserResult searchUserResult = response.body();
-                    liveData.setValue(Resource.success(searchUserResult));
-                } catch (Throwable t) {
-                    liveData.setValue(Resource.error(t));
-                }
-            }
+    public SearchUserResult searchUser(String query) throws Throwable {
+        Response<SearchUserResult> response = githubService.searchUser(query).execute();
 
-            @Override
-            public void onFailure(@NonNull Call<SearchUserResult> call, @NonNull Throwable t) {
-                liveData.setValue(Resource.error(t));
-            }
-        });
-        return liveData;
+        if (response.isSuccessful()) {
+            return response.body();
+        } else {
+            throw new RuntimeException(response.message());
+        }
     }
 
     @Override
-    public LiveData<Resource<User>> getUser(String username) {
-        MutableLiveData<Resource<User>> liveData = new MutableLiveData<>();
-        liveData.setValue(Resource.loading());
-        githubService.getUser(username).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call,
-                                   @NonNull Response<User> response) {
-                try {
-                    User user = response.body();
-                    liveData.setValue(Resource.success(user));
-                } catch (Throwable t) {
-                    liveData.setValue(Resource.error(t));
-                }
-            }
+    public User getUser(String username) throws Throwable {
+        Response<User> response = githubService.getUser(username).execute();
 
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                liveData.setValue(Resource.error(t));
-            }
-        });
-        return liveData;
+        if (response.isSuccessful()) {
+            return response.body();
+        } else {
+            throw new RuntimeException(response.message());
+        }
     }
 }

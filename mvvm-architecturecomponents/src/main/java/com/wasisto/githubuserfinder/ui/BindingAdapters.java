@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,8 @@ import static android.view.View.VISIBLE;
 
 public class BindingAdapters {
 
-    @BindingAdapter("visibleWhen")
-    public static void visibleWhen(View view, Boolean visible) {
+    @BindingAdapter("goneUnless")
+    public static void goneUnless(View view, Boolean visible) {
         if (visible != null && visible) {
             view.setVisibility(VISIBLE);
         } else {
@@ -43,7 +43,7 @@ public class BindingAdapters {
     }
 
     @BindingAdapter("imageUrl")
-    public static void setImageUrl(ImageView imageView, String imageUrl) {
+    public static void imageUrl(ImageView imageView, String imageUrl) {
         Picasso.get().load(imageUrl).placeholder(R.color.colorAccent).into(imageView);
     }
 }

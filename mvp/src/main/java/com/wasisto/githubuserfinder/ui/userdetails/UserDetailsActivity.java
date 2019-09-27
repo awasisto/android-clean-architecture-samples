@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import static android.content.Intent.ACTION_VIEW;
@@ -68,14 +69,16 @@ public class UserDetailsActivity extends AppCompatActivity implements UserDetail
 
         String username = getIntent().getStringExtra(EXTRA_USERNAME);
 
-        presenter = new UserDetailsPresenterImpl(
-                username,
-                this,
-                new GetUserUseCase(
-                        GithubDataSourceImpl.getInstance(this)
-                ),
-                LoggingHelperImpl.getInstance()
-        );
+        presenter =
+                new UserDetailsPresenterImpl(
+                        username,
+                        this,
+                        new GetUserUseCase(
+                                ExecutorProviderImpl.getInstance(),
+                                GithubDataSourceImpl.getInstance(this)
+                        ),
+                        LoggingHelperImpl.getInstance()
+                );
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         avatarImageView = findViewById(R.id.avatarImageView);

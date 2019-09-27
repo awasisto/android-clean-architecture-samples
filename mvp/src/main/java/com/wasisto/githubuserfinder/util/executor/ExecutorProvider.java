@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,9 +20,15 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.ui.userdetails;
+package com.wasisto.githubuserfinder.util.executor;
 
-public interface UserDetailsActionsListener {
+import java.util.concurrent.ExecutorService;
 
-    void onBlogClick();
+public interface ExecutorProvider {
+
+    ExecutorService computation();
+
+    ExecutorService io();
+
+    ExecutorService ui();
 }

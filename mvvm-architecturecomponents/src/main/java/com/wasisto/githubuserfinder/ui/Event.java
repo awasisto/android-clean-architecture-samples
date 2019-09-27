@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,28 @@ package com.wasisto.githubuserfinder.ui;
 
 public class Event<T> {
 
-    private T data;
+    private T content;
 
-    public Event(T data) {
-        this.data = data;
+    private boolean hasBeenHandled = false;
+
+    public Event(T content) {
+        this.content = content;
     }
 
-    public T getData() {
-        return data;
+    public T getContentIfNotHandled() {
+        if (hasBeenHandled) {
+            return null;
+        } else {
+            hasBeenHandled = true;
+            return content;
+        }
+    }
+
+    public T peekContent() {
+        return content;
+    }
+
+    public boolean hasBeenHandled() {
+        return hasBeenHandled;
     }
 }

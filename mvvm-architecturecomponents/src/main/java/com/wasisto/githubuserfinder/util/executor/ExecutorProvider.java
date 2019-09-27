@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,41 +20,15 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.data;
+package com.wasisto.githubuserfinder.util.executor;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+import java.util.concurrent.ExecutorService;
 
-public class Resource<T> {
+public interface ExecutorProvider {
 
-    public Status status;
+    ExecutorService computation();
 
-    public T data;
+    ExecutorService io();
 
-    public Throwable error;
-
-    private Resource(Status status, T data, Throwable error) {
-        this.status = status;
-        this.data = data;
-        this.error = error;
-    }
-
-    public static <T> Resource<T> success(T data) {
-        return new Resource<>(SUCCESS, data, null);
-    }
-
-    public static <T> Resource<T> error(Throwable error) {
-        return new Resource<>(ERROR, null, error);
-    }
-
-    public static <T> Resource<T> loading() {
-        return new Resource<>(LOADING, null, null);
-    }
-
-    public enum Status {
-        SUCCESS,
-        ERROR,
-        LOADING
-    }
+    ExecutorService ui();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,12 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import androidx.lifecycle.LiveData;
-import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;
 
 public interface GithubDataSource {
 
-    LiveData<Resource<SearchUserResult>> searchUser(String query);
+    SearchUserResult searchUser(String query) throws Throwable;
 
-    LiveData<Resource<User>> getUser(String username);
+    User getUser(String username) throws Throwable;
 }

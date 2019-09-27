@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,19 +22,14 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
-import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
-
-public class SearchUseCase implements UseCase<String, Resource<SearchUserResult>> {
+public class SearchUseCase extends UseCase<String, SearchUserResult> {
 
     private static final String TAG = "SearchUseCase";
 
@@ -44,40 +39,27 @@ public class SearchUseCase implements UseCase<String, Resource<SearchUserResult>
 
     private LoggingHelper loggingHelper;
 
-    public SearchUseCase(GithubDataSource githubDataSource, SearchHistoryDataSource searchHistoryDataSource,
+    public SearchUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource,
+                         SearchHistoryDataSource searchHistoryDataSource,
                          LoggingHelper loggingHelper) {
+        super(executorProvider);
         this.githubDataSource = githubDataSource;
         this.searchHistoryDataSource = searchHistoryDataSource;
         this.loggingHelper = loggingHelper;
     }
 
     @Override
-    public LiveData<Resource<SearchUserResult>> execute(String query) {
-        MediatorLiveData liveData = new MediatorLiveData<>();
-
+    public SearchUserResult execute(String query) throws Throwable {
         SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
         searchHistoryItem.setQuery(query);
 
-        liveData.addSource(
-                searchHistoryDataSource.add(searchHistoryItem),
-                object -> {
-                    if (object != null) {
-                        Resource resource = (Resource) object;
-                        if (resource.status == SUCCESS) {
-                            loggingHelper.info(TAG, "Query added to the search history");
-                        } else if (resource.status == ERROR) {
-                            loggingHelper.warn(TAG, "An error occurred while adding a query to the " +
-                                            "search history", resource.error);
-                        }
-                    }
-                }
-        );
+        try {
+            searchHistoryDataSource.add(searchHistoryItem);
+            loggingHelper.info(TAG, "Query added to the search history");
+        } catch (Throwable error) {
+            loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
+        }
 
-        liveData.addSource(
-                githubDataSource.searchUser(query),
-                liveData::setValue
-        );
-
-        return liveData;
+        return githubDataSource.searchUser(query);
     }
 }

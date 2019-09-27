@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,12 @@
 
 package com.wasisto.githubuserfinder.data.github;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;
 
 public interface GithubDataSource {
 
-    void searchUser(String query, Callback<SearchUserResult> callback);
+    SearchUserResult searchUser(String query) throws Throwable;
 
-    void getUser(String username, Callback<User> callback);
+    User getUser(String username) throws Throwable;
 }

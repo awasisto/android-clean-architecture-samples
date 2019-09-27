@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,22 +22,24 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
 import java.util.List;
 
-public class GetHistoryUseCase implements UseCase<Void, List<SearchHistoryItem>> {
+public class GetHistoryUseCase extends UseCase<Void, List<SearchHistoryItem>> {
 
     private SearchHistoryDataSource searchHistoryDataSource;
 
-    public GetHistoryUseCase(SearchHistoryDataSource searchHistoryDataSource) {
+    public GetHistoryUseCase(ExecutorProvider executorProvider,
+                             SearchHistoryDataSource searchHistoryDataSource) {
+        super(executorProvider);
         this.searchHistoryDataSource = searchHistoryDataSource;
     }
 
     @Override
-    public void execute(Void params, Callback<List<SearchHistoryItem>> callback) {
-        searchHistoryDataSource.getAll(callback);
+    public List<SearchHistoryItem> execute(Void params) throws Throwable {
+        return searchHistoryDataSource.getAll();
     }
 }

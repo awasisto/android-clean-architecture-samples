@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,22 +29,45 @@ import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import java.util.List;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class SearchBindingAdapters {
 
-    @BindingAdapter("items")
-    public static void setResultItems(RecyclerView recyclerView, List<SearchUserResult.Item> resultItems) {
+    @BindingAdapter({"resultItems", "viewModel"})
+    public static void resultItems(RecyclerView recyclerView, List<SearchUserResult.Item> resultItems,
+                                   SearchViewModel viewModel) {
         ResultAdapter resultAdapter = (ResultAdapter) recyclerView.getAdapter();
-        if (resultAdapter != null) {
+
+        if (resultAdapter == null) {
+            resultAdapter = new ResultAdapter(viewModel);
+            recyclerView.setAdapter(resultAdapter);
+        }
+
+        if (resultItems == null) {
+            recyclerView.setVisibility(GONE);
+        } else {
+            recyclerView.setVisibility(VISIBLE);
             resultAdapter.setData(resultItems);
             resultAdapter.notifyDataSetChanged();
         }
     }
 
-    @BindingAdapter("items")
-    public static void setHistory(RecyclerView recyclerView, List<SearchHistoryItem> history) {
+    @BindingAdapter({"historyItems", "viewModel"})
+    public static void historyItems(RecyclerView recyclerView, List<SearchHistoryItem> historyItems,
+                                    SearchViewModel viewModel) {
         HistoryAdapter historyAdapter = (HistoryAdapter) recyclerView.getAdapter();
-        if (historyAdapter != null) {
-            historyAdapter.setData(history);
+
+        if (historyAdapter == null) {
+            historyAdapter = new HistoryAdapter(viewModel);
+            recyclerView.setAdapter(historyAdapter);
+        }
+
+        if (historyItems == null) {
+            recyclerView.setVisibility(GONE);
+        } else {
+            recyclerView.setVisibility(VISIBLE);
+            historyAdapter.setData(historyItems);
             historyAdapter.notifyDataSetChanged();
         }
     }

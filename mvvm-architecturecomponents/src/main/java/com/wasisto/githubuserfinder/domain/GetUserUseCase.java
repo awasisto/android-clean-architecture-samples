@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,21 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import androidx.lifecycle.LiveData;
-import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.model.User;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-public class GetUserUseCase implements UseCase<String, Resource<User>> {
+public class GetUserUseCase extends UseCase<String, User> {
 
     private GithubDataSource githubDataSource;
 
-    public GetUserUseCase(GithubDataSource githubDataSource) {
+    public GetUserUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource) {
+        super(executorProvider);
         this.githubDataSource = githubDataSource;
     }
 
     @Override
-    public LiveData<Resource<User>> execute(String username) {
+    public User execute(String username) throws Throwable {
         return githubDataSource.getUser(username);
     }
 }

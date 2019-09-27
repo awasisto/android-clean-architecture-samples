@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,33 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-public interface UseCase<Params, Result> {
+public abstract class UseCase<P, R> {
 
-    void execute(Params params, Callback<Result> callback);
+    private ExecutorProvider executorProvider;
+
+    public UseCase(ExecutorProvider executorProvider) {
+        this.executorProvider = executorProvider;
+    }
+
+    public void executeAsync(P params, Callback<R> callback) {
+        executorProvider.io().submit(() -> {
+            try {
+                R result = execute(params);
+                executorProvider.ui().submit(() -> callback.onSuccess(result));
+            } catch (Throwable error) {
+                executorProvider.ui().submit(() -> callback.onError(error));
+            }
+        });
+    }
+
+    abstract R execute(P params) throws Throwable;
+
+    public interface Callback<T> {
+
+        void onSuccess(T result);
+
+        void onError(Throwable error);
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
@@ -70,18 +71,21 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        presenter = new SearchPresenterImpl(
-                this,
-                new SearchUseCase(
-                        GithubDataSourceImpl.getInstance(this),
-                        SearchHistoryDataSourceImpl.getInstance(this),
+        presenter =
+                new SearchPresenterImpl(
+                        this,
+                        new SearchUseCase(
+                                ExecutorProviderImpl.getInstance(),
+                                GithubDataSourceImpl.getInstance(this),
+                                SearchHistoryDataSourceImpl.getInstance(this),
+                                LoggingHelperImpl.getInstance()
+                        ),
+                        new GetHistoryUseCase(
+                                ExecutorProviderImpl.getInstance(),
+                                SearchHistoryDataSourceImpl.getInstance(this)
+                        ),
                         LoggingHelperImpl.getInstance()
-                ),
-                new GetHistoryUseCase(
-                        SearchHistoryDataSourceImpl.getInstance(this)
-                ),
-                LoggingHelperImpl.getInstance()
-        );
+                );
 
         loadingIndicator = findViewById(R.id.loadingIndicator);
         queryEditText = findViewById(R.id.queryEditText);
@@ -92,14 +96,10 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
         resultAdapter = new ResultAdapter(new ArrayList<>());
         resultAdapter.setOnItemClickListener(resultItem -> presenter.onResultItemClick(resultItem));
-
-        resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         resultRecyclerView.setAdapter(resultAdapter);
 
         historyAdapter = new HistoryAdapter(new ArrayList<>());
         historyAdapter.setOnItemClickListener(historyItem -> presenter.onHistoryItemClick(historyItem));
-
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         historyRecyclerView.setAdapter(historyAdapter);
 
         searchButton.setOnClickListener(v -> presenter.onSearch(queryEditText.getText().toString()));

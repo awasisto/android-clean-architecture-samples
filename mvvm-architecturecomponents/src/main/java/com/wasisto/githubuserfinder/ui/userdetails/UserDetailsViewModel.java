@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,21 @@ package com.wasisto.githubuserfinder.ui.userdetails;
 
 import androidx.lifecycle.*;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.Resource;
+import com.wasisto.githubuserfinder.domain.UseCase;
 import com.wasisto.githubuserfinder.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.ui.Event;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
 
 public class UserDetailsViewModel extends ViewModel {
 
     private static final String TAG = "UserDetailsViewModel";
 
-    private MediatorLiveData<Resource<User>> getUserResult = new MediatorLiveData<>();
+    private MediatorLiveData<UseCase.Result<User>> getUserResult = new MediatorLiveData<>();
 
     private LiveData<Boolean> isLoading;
 
@@ -54,9 +54,9 @@ public class UserDetailsViewModel extends ViewModel {
 
     public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
         getUserResult.addSource(
-                getUserUseCase.execute(username),
+                getUserUseCase.executeAsync(username),
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
                     }
 
@@ -82,7 +82,7 @@ public class UserDetailsViewModel extends ViewModel {
         showToastEvent.addSource(
                 getUserResult,
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -91,7 +91,7 @@ public class UserDetailsViewModel extends ViewModel {
         closeActivityEvent.addSource(
                 getUserResult,
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         closeActivityEvent.setValue(new Event<>(null));
                     }
                 }
@@ -99,9 +99,9 @@ public class UserDetailsViewModel extends ViewModel {
     }
 
     public void onBlogClick() {
-        User userValue = user.getValue();
-        if (userValue != null) {
-            openBrowserEvent.setValue(new Event<>(userValue.getBlog()));
+        User u = user.getValue();
+        if (u != null) {
+            openBrowserEvent.setValue(new Event<>(u.getBlog()));
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,67 @@
 package com.wasisto.githubuserfinder.domain;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-public interface UseCase<Params, Result> {
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-    LiveData<Result> execute(Params params);
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
+
+public abstract class UseCase<P, R> {
+
+    private ExecutorProvider executorProvider;
+
+    public UseCase(ExecutorProvider executorProvider) {
+        this.executorProvider = executorProvider;
+    }
+
+    public LiveData<Result<R>> executeAsync(P params) {
+        MutableLiveData<Result<R>> result = new MutableLiveData<>();
+        result.setValue(Result.loading());
+        executorProvider.io().submit(() -> {
+            try {
+                result.postValue(Result.success(execute(params)));
+            } catch (Throwable error) {
+                result.postValue(Result.error(error));
+            }
+        });
+        return result;
+    }
+
+    abstract R execute(P params) throws Throwable;
+
+    public static class Result<T> {
+
+        public Status status;
+
+        public T data;
+
+        public Throwable error;
+
+        private Result(Status status, T data, Throwable error) {
+            this.status = status;
+            this.data = data;
+            this.error = error;
+        }
+
+        public static <T> Result<T> success(T data) {
+            return new Result<>(SUCCESS, data, null);
+        }
+
+        public static <T> Result<T> error(Throwable error) {
+            return new Result<>(ERROR, null, error);
+        }
+
+        public static <T> Result<T> loading() {
+            return new Result<>(LOADING, null, null);
+        }
+
+        public enum Status {
+            SUCCESS,
+            ERROR,
+            LOADING
+        }
+    }
 }

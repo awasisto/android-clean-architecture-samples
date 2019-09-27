@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.wasisto.githubuserfinder.ui.search;
 
 import androidx.lifecycle.*;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.data.Resource;
+import com.wasisto.githubuserfinder.domain.UseCase;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
@@ -34,17 +34,17 @@ import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 import java.util.List;
 
-import static com.wasisto.githubuserfinder.data.Resource.Status.ERROR;
-import static com.wasisto.githubuserfinder.data.Resource.Status.LOADING;
-import static com.wasisto.githubuserfinder.data.Resource.Status.SUCCESS;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.ERROR;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.LOADING;
+import static com.wasisto.githubuserfinder.domain.UseCase.Result.Status.SUCCESS;
 
 public class SearchViewModel extends ViewModel {
 
     private static final String TAG = "SearchViewModel";
 
-    private MediatorLiveData<Resource<SearchUserResult>> searchUserResult = new MediatorLiveData<>();
+    private MediatorLiveData<UseCase.Result<SearchUserResult>> searchUserResult = new MediatorLiveData<>();
 
-    private MediatorLiveData<Resource<List<SearchHistoryItem>>> getHistoryResult = new MediatorLiveData<>();
+    private MediatorLiveData<UseCase.Result<List<SearchHistoryItem>>> getHistoryResult = new MediatorLiveData<>();
 
     private MutableLiveData<String> query = new MutableLiveData<>();
 
@@ -52,11 +52,11 @@ public class SearchViewModel extends ViewModel {
 
     private LiveData<List<SearchHistoryItem>> history;
 
-    private LiveData<Boolean> isShouldShowNoResultsText;
+    private LiveData<Boolean> shouldShowNoResultsText;
 
-    private LiveData<Boolean> isShouldShowResult;
+    private LiveData<Boolean> shouldShowResult;
 
-    private MediatorLiveData<Boolean> isShouldShowHistory = new MediatorLiveData<>();
+    private MediatorLiveData<Boolean> shouldShowHistory = new MediatorLiveData<>();
 
     private MediatorLiveData<Boolean> isLoading = new MediatorLiveData<>();
 
@@ -74,9 +74,9 @@ public class SearchViewModel extends ViewModel {
         this.loggingHelper = loggingHelper;
 
         getHistoryResult.addSource(
-                getHistoryUseCase.execute(null),
+                getHistoryUseCase.executeAsync(null),
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         loggingHelper.error(TAG, "An error occurred while getting the search user history",
                                 resource.error);
                     }
@@ -95,7 +95,7 @@ public class SearchViewModel extends ViewModel {
                 resource -> resource.data
         );
 
-        isShouldShowNoResultsText = Transformations.map(
+        shouldShowNoResultsText = Transformations.map(
                 searchUserResult,
                 resource -> {
                     if (resource.status == SUCCESS) {
@@ -106,40 +106,32 @@ public class SearchViewModel extends ViewModel {
                 }
         );
 
-        isShouldShowResult = Transformations.map(
+        shouldShowResult = Transformations.map(
                 searchUserResult,
                 resource -> resource.status == SUCCESS
         );
 
-        isShouldShowHistory.setValue(true);
+        shouldShowHistory.setValue(true);
 
-        isShouldShowHistory.addSource(
+        shouldShowHistory.addSource(
                 searchUserResult,
-                resource -> isShouldShowHistory.setValue(false)
+                resource -> shouldShowHistory.setValue(false)
         );
 
         isLoading.addSource(
                 searchUserResult,
-                resource -> {
-                    if (resource != null) {
-                        isLoading.setValue(resource.status == LOADING);
-                    }
-                }
+                resource -> isLoading.setValue(resource.status == LOADING)
         );
 
         isLoading.addSource(
                 getHistoryResult,
-                resource -> {
-                    if (resource != null) {
-                        isLoading.setValue(resource.status == LOADING);
-                    }
-                }
+                resource -> isLoading.setValue(resource.status == LOADING)
         );
 
         showToastEvent.addSource(
                 searchUserResult,
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -148,7 +140,7 @@ public class SearchViewModel extends ViewModel {
         showToastEvent.addSource(
                 getHistoryResult,
                 resource -> {
-                    if (resource != null && resource.status == ERROR) {
+                    if (resource.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -156,15 +148,15 @@ public class SearchViewModel extends ViewModel {
     }
 
     public void onSearch() {
-        String queryValue = query.getValue();
-        if (queryValue != null) {
+        String q = query.getValue();
+        if (q != null) {
             if (query.getValue().isEmpty()) {
                 showToastEvent.setValue(new Event<>(R.string.enter_search_query));
             } else {
                 searchUserResult.addSource(
-                        searchUseCase.execute(queryValue),
+                        searchUseCase.executeAsync(q),
                         resource -> {
-                            if (resource != null && resource.status == ERROR) {
+                            if (resource.status == ERROR) {
                                 loggingHelper.error(TAG, "An error occurred while searching users",
                                         resource.error);
                             }
@@ -197,16 +189,16 @@ public class SearchViewModel extends ViewModel {
         return history;
     }
 
-    public LiveData<Boolean> getIsShouldShowNoResultsText() {
-        return isShouldShowNoResultsText;
+    public LiveData<Boolean> getShouldShowNoResultsText() {
+        return shouldShowNoResultsText;
     }
 
-    public LiveData<Boolean> getIsShouldShowResult() {
-        return isShouldShowResult;
+    public LiveData<Boolean> getShouldShowResult() {
+        return shouldShowResult;
     }
 
-    public LiveData<Boolean> getIsShouldShowHistory() {
-        return isShouldShowHistory;
+    public LiveData<Boolean> getShouldShowHistory() {
+        return shouldShowHistory;
     }
 
     public MediatorLiveData<Boolean> getIsLoading() {

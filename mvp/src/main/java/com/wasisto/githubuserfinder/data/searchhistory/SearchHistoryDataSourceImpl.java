@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import android.os.Handler;
-import android.os.Looper;
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
@@ -46,10 +41,6 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
 
     private SearchHistoryDbHelper dbHelper;
 
-    private Executor executor = Executors.newSingleThreadExecutor();
-
-    private Handler handler = new Handler(Looper.getMainLooper());
-    
     private SearchHistoryDataSourceImpl(Context context) {
         dbHelper = new SearchHistoryDbHelper(context);
     }
@@ -62,60 +53,45 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
         return instance;
     }
 
-
     @Override
-    public void getAll(Callback<List<SearchHistoryItem>> callback) {
-        executor.execute(() -> {
-            try {
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
+    public List<SearchHistoryItem> getAll() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-                String[] projection = {
-                        SearchHistoryEntry._ID,
-                        SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY
-                };
+        String[] projection = {
+                SearchHistoryEntry._ID,
+                SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY
+        };
 
-                Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
-                        null, null, null);
+        Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
+                null, null, null);
 
-                List<SearchHistoryItem> searchHistory = new ArrayList<>();
+        List<SearchHistoryItem> searchHistory = new ArrayList<>();
 
-                while (cursor.moveToNext()) {
-                    int searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(SearchHistoryEntry._ID));
-                    String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
-                            SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
+        while (cursor.moveToNext()) {
+            int searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(SearchHistoryEntry._ID));
+            String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
+                    SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
 
-                    SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
-                    searchHistoryItem.setId(searchHistoryItemId);
-                    searchHistoryItem.setQuery(searchHistoryItemQuery);
+            SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
+            searchHistoryItem.setId(searchHistoryItemId);
+            searchHistoryItem.setQuery(searchHistoryItemQuery);
 
-                    searchHistory.add(searchHistoryItem);
-                }
+            searchHistory.add(searchHistoryItem);
+        }
 
-                cursor.close();
+        cursor.close();
 
-                handler.post(() -> callback.onSuccess(searchHistory));
-            } catch (Throwable t) {
-                handler.post(() -> callback.onError(t));
-            }
-        });
+        return searchHistory;
     }
 
     @Override
-    public void add(SearchHistoryItem searchHistoryItem, Callback<Void> callback) {
-        executor.execute(() -> {
-            try {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+    public void add(SearchHistoryItem searchHistoryItem) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
 
-                db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
-                        CONFLICT_REPLACE);
-
-                handler.post(() -> callback.onSuccess(null));
-            } catch (Throwable t) {
-                handler.post(() -> callback.onError(t));
-            }
-        });
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
+                CONFLICT_REPLACE);
     }
 }

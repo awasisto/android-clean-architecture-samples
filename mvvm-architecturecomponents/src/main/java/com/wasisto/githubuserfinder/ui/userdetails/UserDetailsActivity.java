@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@ import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl;
 import com.wasisto.githubuserfinder.databinding.ActivityUserDetailsBinding;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import static android.content.Intent.ACTION_VIEW;
@@ -44,8 +45,6 @@ public class UserDetailsActivity extends AppCompatActivity {
 
     private UserDetailsViewModel viewModel;
 
-    private ActivityUserDetailsBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,28 +54,31 @@ public class UserDetailsActivity extends AppCompatActivity {
         UserDetailsViewModelFactory viewModelFactory =
                 new UserDetailsViewModelFactory(
                         username,
-                        new GetUserUseCase(GithubDataSourceImpl.getInstance(this)),
+                        new GetUserUseCase(
+                                ExecutorProviderImpl.getInstance(),
+                                GithubDataSourceImpl.getInstance(this)
+                        ),
                         LoggingHelperImpl.getInstance()
                 );
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(UserDetailsViewModel.class);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details);
+        ActivityUserDetailsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_user_details);
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 
         viewModel.getOpenBrowserEvent().observe(this, event -> {
-            if (event != null) {
+            if (!event.hasBeenHandled()) {
                 Intent intent = new Intent(ACTION_VIEW);
-                intent.setData(Uri.parse(event.getData()));
+                intent.setData(Uri.parse(event.getContentIfNotHandled()));
 
                 startActivity(intent);
             }
         });
 
         viewModel.getShowToastEvent().observe(this, event -> {
-            if (event != null) {
-                Toast.makeText(this, event.getData(), LENGTH_SHORT).show();
+            if (!event.hasBeenHandled()) {
+                Toast.makeText(this, event.getContentIfNotHandled(), LENGTH_SHORT).show();
             }
         });
 

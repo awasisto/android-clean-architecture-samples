@@ -23,15 +23,12 @@
 package com.wasisto.githubuserfinder.data.github;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.User;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -81,43 +78,24 @@ public class GithubDataSourceImpl implements GithubDataSource {
     }
 
     @Override
-    public void searchUser(String query, Callback<SearchUserResult> callback) {
-        githubService.searchUser(query).enqueue(new retrofit2.Callback<SearchUserResult>() {
-            @Override
-            public void onResponse(@NonNull Call<SearchUserResult> call,
-                                   @NonNull Response<SearchUserResult> response) {
-                try {
-                    SearchUserResult searchUserResult = response.body();
-                    callback.onSuccess(searchUserResult);
-                } catch (Throwable t) {
-                    callback.onError(t);
-                }
-            }
+    public SearchUserResult searchUser(String query) throws Throwable {
+        Response<SearchUserResult> response = githubService.searchUser(query).execute();
 
-            @Override
-            public void onFailure(@NonNull Call<SearchUserResult> call, @NonNull Throwable t) {
-                callback.onError(t);
-            }
-        });
+        if (response.isSuccessful()) {
+            return response.body();
+        } else {
+            throw new RuntimeException(response.message());
+        }
     }
 
     @Override
-    public void getUser(String username, Callback<User> callback) {
-        githubService.getUser(username).enqueue(new retrofit2.Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                try {
-                    User user = response.body();
-                    callback.onSuccess(user);
-                } catch (Throwable t) {
-                    callback.onError(t);
-                }
-            }
+    public User getUser(String username) throws Throwable {
+        Response<User> response = githubService.getUser(username).execute();
 
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {
-                callback.onError(t);
-            }
-        });
+        if (response.isSuccessful()) {
+            return response.body();
+        } else {
+            throw new RuntimeException(response.message());
+        }
     }
 }

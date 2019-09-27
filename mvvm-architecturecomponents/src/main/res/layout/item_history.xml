@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Andika Wasisto
+  ~ Copyright (c) 2019 Andika Wasisto
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@
 
     <data>
         <variable name="historyItem" type="com.wasisto.githubuserfinder.model.SearchHistoryItem" />
-        <variable name="listener" type="com.wasisto.githubuserfinder.ui.search.HistoryItemActionsListener" />
+        <variable name="viewModel" type="com.wasisto.githubuserfinder.ui.search.SearchViewModel" />
     </data>
 
     <FrameLayout
@@ -35,7 +35,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
-        android:onClick="@{() -> listener.onClick(historyItem)}">
+        android:onClick="@{() -> viewModel.onHistoryItemClick(historyItem)}">
 
         <TextView
             android:layout_width="match_parent"

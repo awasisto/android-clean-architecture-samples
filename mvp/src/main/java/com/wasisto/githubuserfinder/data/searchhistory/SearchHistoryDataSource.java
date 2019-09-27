@@ -22,14 +22,13 @@
 
 package com.wasisto.githubuserfinder.data.searchhistory;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
 import java.util.List;
 
 public interface SearchHistoryDataSource {
 
-    void getAll(Callback<List<SearchHistoryItem>> callback);
+    List<SearchHistoryItem> getAll() throws Throwable;
 
-    void add(SearchHistoryItem searchHistoryItem, Callback<Void> callback);
+    void add(SearchHistoryItem searchHistoryItem) throws Throwable;
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Andika Wasisto
+  ~ Copyright (c) 2019 Andika Wasisto
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,11 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable name="resultItem" type="com.wasisto.githubuserfinder.model.SearchUserResult.Item" />
-        <variable name="listener" type="com.wasisto.githubuserfinder.ui.search.ResultItemActionsListener" />
+        <variable name="viewModel" type="com.wasisto.githubuserfinder.ui.search.SearchViewModel" />
     </data>
 
     <LinearLayout
@@ -37,13 +36,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
-        android:onClick="@{() -> listener.onClick(resultItem)}">
+        android:onClick="@{() -> viewModel.onResultItemClick(resultItem)}">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"
-            app:imageUrl="@{resultItem.avatarUrl}" />
+            imageUrl="@{resultItem.avatarUrl}" />
 
         <TextView
             android:layout_width="match_parent"

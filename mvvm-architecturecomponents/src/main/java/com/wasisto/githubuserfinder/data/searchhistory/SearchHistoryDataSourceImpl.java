@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,6 @@
 
 package com.wasisto.githubuserfinder.data.searchhistory;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -31,12 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import android.os.Handler;
-import android.os.Looper;
-import com.wasisto.githubuserfinder.data.Resource;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryContract.SearchHistoryEntry;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 
@@ -47,10 +40,6 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
     private static volatile SearchHistoryDataSourceImpl instance;
 
     private SearchHistoryDbHelper dbHelper;
-
-    private Executor executor = Executors.newSingleThreadExecutor();
-
-    private Handler handler = new Handler(Looper.getMainLooper());
 
     private SearchHistoryDataSourceImpl(Context context) {
         dbHelper = new SearchHistoryDbHelper(context);
@@ -64,70 +53,45 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
         return instance;
     }
 
-
     @Override
-    public LiveData<Resource<List<SearchHistoryItem>>> getAll() {
-        MutableLiveData<Resource<List<SearchHistoryItem>>> liveData = new MutableLiveData<>();
+    public List<SearchHistoryItem> getAll() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        liveData.setValue(Resource.loading());
+        String[] projection = {
+                SearchHistoryEntry._ID,
+                SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY
+        };
 
-        executor.execute(() -> {
-            try {
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
+                null, null, null);
 
-                String[] projection = {
-                        SearchHistoryEntry._ID,
-                        SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY
-                };
+        List<SearchHistoryItem> searchHistory = new ArrayList<>();
 
-                Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
-                        null, null, null);
+        while (cursor.moveToNext()) {
+            int searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(SearchHistoryEntry._ID));
+            String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
+                    SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
 
-                List<SearchHistoryItem> searchHistory = new ArrayList<>();
+            SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
+            searchHistoryItem.setId(searchHistoryItemId);
+            searchHistoryItem.setQuery(searchHistoryItemQuery);
 
-                while (cursor.moveToNext()) {
-                    int searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(SearchHistoryEntry._ID));
-                    String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
-                            SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
+            searchHistory.add(searchHistoryItem);
+        }
 
-                    SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
-                    searchHistoryItem.setId(searchHistoryItemId);
-                    searchHistoryItem.setQuery(searchHistoryItemQuery);
+        cursor.close();
 
-                    searchHistory.add(searchHistoryItem);
-                }
-
-                cursor.close();
-
-                handler.post(() -> liveData.setValue(Resource.success(searchHistory)));
-            } catch (Throwable t) {
-                handler.post(() -> liveData.setValue(Resource.error(t)));
-            }
-        });
-
-        return liveData;
+        return searchHistory;
     }
 
     @Override
-    public LiveData<Resource<Void>> add(SearchHistoryItem searchHistoryItem) {
-        MutableLiveData<Resource<Void>> liveData = new MutableLiveData<>();
+    public void add(SearchHistoryItem searchHistoryItem) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        executor.execute(() -> {
-            try {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
 
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
-
-                db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
-                        CONFLICT_REPLACE);
-
-                handler.post(() -> liveData.setValue(Resource.success(null)));
-            } catch (Throwable t) {
-                handler.post(() -> liveData.setValue(Resource.error(t)));
-            }
-        });
-
-        return liveData;
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
+                CONFLICT_REPLACE);
     }
 }

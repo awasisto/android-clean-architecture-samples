@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,10 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import androidx.databinding.DataBindingUtil;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import com.wasisto.githubuserfinder.R;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.databinding.ItemResultBinding;
 
@@ -39,25 +37,19 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     private SearchViewModel viewModel;
 
-    public ResultAdapter(List<SearchUserResult.Item> data, SearchViewModel viewModel) {
-        this.data = data;
+    public ResultAdapter(SearchViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemResultBinding binding = DataBindingUtil.inflate(
-                LayoutInflater.from(parent.getContext()), R.layout.item_result, parent, false);
-        return new ViewHolder(binding);
+        return new ViewHolder(ItemResultBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(
-                data.get(position),
-                resultItem -> viewModel.onResultItemClick(resultItem)
-        );
+        holder.bind(data.get(position), viewModel);
     }
 
     @Override
@@ -78,9 +70,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             this.binding = binding;
         }
 
-        public void bind(SearchUserResult.Item resultItem, ResultItemActionsListener listener) {
+        public void bind(SearchUserResult.Item resultItem, SearchViewModel viewModel) {
             binding.setResultItem(resultItem);
-            binding.setListener(listener);
+            binding.setViewModel(viewModel);
         }
     }
 }

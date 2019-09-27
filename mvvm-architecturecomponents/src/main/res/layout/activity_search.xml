@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Andika Wasisto
+  ~ Copyright (c) 2019 Andika Wasisto
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -65,18 +65,22 @@
                 android:layout_weight="1">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/historyRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:items="@{viewModel.history}"
-                    app:visibleWhen="@{viewModel.isShouldShowHistory}" />
-
-                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/resultRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:items="@{viewModel.result.items}"
-                    app:visibleWhen="@{viewModel.isShouldShowResult}" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    resultItems="@{viewModel.result.items}"
+                    viewModel="@{viewModel}"
+                    goneUnless="@{viewModel.shouldShowResult}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/historyRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    historyItems="@{viewModel.history}"
+                    viewModel="@{viewModel}"
+                    goneUnless="@{viewModel.shouldShowHistory}" />
             </FrameLayout>
         </LinearLayout>
 
@@ -85,12 +89,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/no_results"
-            app:visibleWhen="@{viewModel.isShouldShowNoResultsText}" />
+            goneUnless="@{viewModel.shouldShowNoResultsText}" />
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:visibleWhen="@{viewModel.isLoading}" />
+            goneUnless="@{viewModel.isLoading}" />
     </FrameLayout>
 </layout>

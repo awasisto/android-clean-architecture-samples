@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import com.wasisto.githubuserfinder.databinding.ActivitySearchBinding;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl;
 
 import java.util.ArrayList;
@@ -46,8 +47,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchViewModel viewModel;
 
-    private ActivitySearchBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +55,13 @@ public class SearchActivity extends AppCompatActivity {
         SearchViewModelFactory viewModelFactory =
                 new SearchViewModelFactory(
                         new SearchUseCase(
+                                ExecutorProviderImpl.getInstance(),
                                 GithubDataSourceImpl.getInstance(this),
                                 SearchHistoryDataSourceImpl.getInstance(this),
                                 LoggingHelperImpl.getInstance()
                         ),
                         new GetHistoryUseCase(
+                                ExecutorProviderImpl.getInstance(),
                                 SearchHistoryDataSourceImpl.getInstance(this)
                         ),
                         LoggingHelperImpl.getInstance()
@@ -68,30 +69,22 @@ public class SearchActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchViewModel.class);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
+        ActivitySearchBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         binding.setLifecycleOwner(this);
         binding.setViewModel(viewModel);
 
-        HistoryAdapter historyAdapter = new HistoryAdapter(new ArrayList<>(), viewModel);
-        binding.historyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.historyRecyclerView.setAdapter(historyAdapter);
-
-        ResultAdapter resultAdapter = new ResultAdapter(new ArrayList<>(), viewModel);
-        binding.resultRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.resultRecyclerView.setAdapter(resultAdapter);
-
         viewModel.getOpenUserDetailsActivityEvent().observe(this, event -> {
-            if (event != null) {
+            if (!event.hasBeenHandled()) {
                 Intent intent = new Intent(this, UserDetailsActivity.class);
-                intent.putExtra(UserDetailsActivity.EXTRA_USERNAME, event.getData());
+                intent.putExtra(UserDetailsActivity.EXTRA_USERNAME, event.getContentIfNotHandled());
 
                 startActivity(intent);
             }
         });
 
         viewModel.getShowToastEvent().observe(this, event -> {
-            if (event != null) {
-                Toast.makeText(SearchActivity.this, event.getData(), LENGTH_SHORT).show();
+            if (!event.hasBeenHandled()) {
+                Toast.makeText(SearchActivity.this, event.getContentIfNotHandled(), LENGTH_SHORT).show();
             }
         });
     }

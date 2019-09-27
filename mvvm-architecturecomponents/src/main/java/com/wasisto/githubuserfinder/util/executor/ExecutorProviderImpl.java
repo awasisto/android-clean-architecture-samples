@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,40 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.ui.search;
+package com.wasisto.githubuserfinder.util.executor;
 
-import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public interface HistoryItemActionsListener {
+public class ExecutorProviderImpl implements ExecutorProvider {
 
-    void onClick(SearchHistoryItem historyItem);
+    private static volatile ExecutorProviderImpl instance = new ExecutorProviderImpl();
+
+    private ExecutorService computationExecutor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+    private ExecutorService ioExecutor = Executors.newCachedThreadPool();
+
+    private ExecutorService uiExecutor = UiExecutor.getInstance();
+
+    private ExecutorProviderImpl() {
+    }
+
+    public static ExecutorProviderImpl getInstance() {
+        return instance;
+    }
+
+    @Override
+    public ExecutorService computation() {
+        return computationExecutor;
+    }
+
+    @Override
+    public ExecutorService io() {
+        return ioExecutor;
+    }
+
+    @Override
+    public ExecutorService ui() {
+        return uiExecutor;
+    }
 }

@@ -21,8 +21,7 @@
   ~ SOFTWARE.
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <import type="android.view.View" />
@@ -48,8 +47,8 @@
                     android:layout_width="136dp"
                     android:layout_height="136dp"
                     android:layout_marginBottom="16dp"
-                    app:imageUrl="@{viewModel.user.avatarUrl}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    imageUrl="@{viewModel.user.avatarUrl}"
+                    goneUnless="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,7 +57,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="24sp"
                     android:text="@{viewModel.user.name}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,7 +66,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.login}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -76,7 +75,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.company}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,7 +84,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.location}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.isShouldShowUser}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +95,7 @@
                     android:textSize="16sp"
                     android:text="@{viewModel.user.blog}"
                     android:onClick="@{() -> viewModel.onBlogClick()}"
-                    app:visibleWhen="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.isShouldShowUser}" />
             </LinearLayout>
         </ScrollView>
 
@@ -104,6 +103,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:visibleWhen="@{viewModel.isLoading}" />
+            goneUnless="@{viewModel.isLoading}" />
     </FrameLayout>
 </layout>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.ui.userdetails;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.domain.UseCase;
 import com.wasisto.githubuserfinder.model.User;
 import com.wasisto.githubuserfinder.domain.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
@@ -59,7 +59,7 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
 
         view.showLoadingIndicator();
 
-        getUserUseCase.execute(username, new Callback<User>() {
+        getUserUseCase.executeAsync(username, new UseCase.Callback<User>() {
             @Override
             public void onSuccess(User user) {
                 view.hideLoadingIndicator();
@@ -100,7 +100,7 @@ public class UserDetailsPresenterImpl implements UserDetailsPresenter {
     public void onBlogClick() {
         view.showLoadingIndicator();
 
-        getUserUseCase.execute(username, new Callback<User>() {
+        getUserUseCase.executeAsync(username, new UseCase.Callback<User>() {
             @Override
             public void onSuccess(User user) {
                 view.hideLoadingIndicator();

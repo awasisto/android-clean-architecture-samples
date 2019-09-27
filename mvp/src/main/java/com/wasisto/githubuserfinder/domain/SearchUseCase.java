@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,14 @@
 
 package com.wasisto.githubuserfinder.domain;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-public class SearchUseCase implements UseCase<String, SearchUserResult> {
+public class SearchUseCase extends UseCase<String, SearchUserResult> {
 
     private static final String TAG = "SearchUseCase";
 
@@ -39,30 +39,27 @@ public class SearchUseCase implements UseCase<String, SearchUserResult> {
 
     private LoggingHelper loggingHelper;
 
-    public SearchUseCase(GithubDataSource githubDataSource, SearchHistoryDataSource searchHistoryDataSource,
+    public SearchUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource,
+                         SearchHistoryDataSource searchHistoryDataSource,
                          LoggingHelper loggingHelper) {
+        super(executorProvider);
         this.githubDataSource = githubDataSource;
         this.searchHistoryDataSource = searchHistoryDataSource;
         this.loggingHelper = loggingHelper;
     }
 
     @Override
-    public void execute(String query, Callback<SearchUserResult> callback) {
+    public SearchUserResult execute(String query) throws Throwable {
         SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
         searchHistoryItem.setQuery(query);
 
-        searchHistoryDataSource.add(searchHistoryItem, new Callback<Void>() {
-            @Override
-            public void onSuccess(Void result) {
-                loggingHelper.info(TAG, "Query added to the search history");
-            }
+        try {
+            searchHistoryDataSource.add(searchHistoryItem);
+            loggingHelper.info(TAG, "Query added to the search history");
+        } catch (Throwable error) {
+            loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
+        }
 
-            @Override
-            public void onError(Throwable error) {
-                loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
-            }
-        });
-
-        githubDataSource.searchUser(query, callback);
+        return githubDataSource.searchUser(query);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Andika Wasisto
+ * Copyright (c) 2019 Andika Wasisto
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 
 package com.wasisto.githubuserfinder.ui.search;
 
-import com.wasisto.githubuserfinder.Callback;
 import com.wasisto.githubuserfinder.R;
+import com.wasisto.githubuserfinder.domain.UseCase;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
@@ -60,7 +60,7 @@ public class SearchPresenterImpl implements SearchPresenter {
         view.hideHistory();
         view.hideNoResultsText();
 
-        getHistoryUseCase.execute(null, new Callback<List<SearchHistoryItem>>() {
+        getHistoryUseCase.executeAsync(null, new UseCase.Callback<List<SearchHistoryItem>>() {
             @Override
             public void onSuccess(List<SearchHistoryItem> history) {
                 view.hideLoadingIndicator();
@@ -106,7 +106,7 @@ public class SearchPresenterImpl implements SearchPresenter {
             view.hideHistory();
             view.hideNoResultsText();
 
-            searchUseCase.execute(query, new Callback<SearchUserResult>() {
+            searchUseCase.executeAsync(query, new UseCase.Callback<SearchUserResult>() {
                 @Override
                 public void onSuccess(SearchUserResult result) {
                     view.hideLoadingIndicator();
