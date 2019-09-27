@@ -51,34 +51,34 @@ public class UserDetailsViewModel extends ViewModel {
     public UserDetailsViewModel(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
         getUserResult.addSource(
                 getUserUseCase.executeAsync(username),
-                resource -> {
-                    if (resource.status == UseCase.Result.Status.ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while getting a user", resource.error);
+                result -> {
+                    if (result.status == UseCase.Result.Status.ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting a user", result.error);
                     }
 
-                    getUserResult.setValue(resource);
+                    getUserResult.setValue(result);
                 }
         );
 
         isLoading = Transformations.map(
                 getUserResult,
-                resource -> resource.status == UseCase.Result.Status.LOADING
+                result -> result.status == UseCase.Result.Status.LOADING
         );
 
         user = Transformations.map(
                 getUserResult,
-                resource -> resource.data
+                result -> result.data
         );
 
         shouldShowUserDetails = Transformations.map(
                 getUserResult,
-                resource -> resource.status == UseCase.Result.Status.SUCCESS
+                result -> result.status == UseCase.Result.Status.SUCCESS
         );
 
         showToastEvent.addSource(
                 getUserResult,
-                resource -> {
-                    if (resource.status == UseCase.Result.Status.ERROR) {
+                result -> {
+                    if (result.status == UseCase.Result.Status.ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -86,8 +86,8 @@ public class UserDetailsViewModel extends ViewModel {
 
         closeActivityEvent.addSource(
                 getUserResult,
-                resource -> {
-                    if (resource.status == UseCase.Result.Status.ERROR) {
+                result -> {
+                    if (result.status == UseCase.Result.Status.ERROR) {
                         closeActivityEvent.setValue(new Event<>(null));
                     }
                 }
