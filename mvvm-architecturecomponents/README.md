@@ -1,5 +1,5 @@
-Android Clean Architecture - MVVM + Android Architecture Components
-===================================================================
+Android Clean Architecture Sample - MVVM + Android Architecture Components
+==========================================================================
 
 A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.
 
@@ -17,7 +17,7 @@ A simple app for searching GitHub users with search history feature.
 Package structure
 -----------------
 
-![](https://i.imgur.com/2ZvfuCU.png)
+![](https://i.imgur.com/BH7NPPo.png)
 
 Layers overview
 ---------------
@@ -42,12 +42,12 @@ This sample has the following layers:
 
 - Data
 
-  This layer contains data access logic such as database connection, API consumption, etc.
+  This layer contains data access logic such as database connection, REST API call, etc.
 
 License
 -------
 
-    Copyright (c) 2018 Andika Wasisto
+    Copyright (c) 2019 Andika Wasisto
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
