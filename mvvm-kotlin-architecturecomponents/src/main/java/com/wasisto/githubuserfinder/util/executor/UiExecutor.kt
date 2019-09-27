@@ -32,9 +32,10 @@ object UiExecutor : AbstractExecutorService() {
     private val handler: Handler = Handler(Looper.getMainLooper())
 
     override fun execute(command: Runnable) {
-        when {
-            handler.looper == Looper.myLooper() -> command.run()
-            else -> handler.post(command)
+        if (handler.looper == Looper.myLooper()) {
+            command.run()
+        } else {
+            handler.post(command)
         }
     }
 

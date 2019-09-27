@@ -41,13 +41,13 @@ class SearchUseCase(
     }
 
     override fun execute(params: String): SearchUserResult {
-        val searchHistoryItem = SearchHistoryItem(null, params)
+        val searchHistoryItem = SearchHistoryItem(null, query = params)
 
         try {
             searchHistoryDataSource.add(searchHistoryItem)
             loggingHelper.info(TAG, "Query added to the search history")
-        } catch (t: Throwable) {
-            loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", t)
+        } catch (error: Throwable) {
+            loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error)
         }
 
         return githubDataSource.searchUser(params)

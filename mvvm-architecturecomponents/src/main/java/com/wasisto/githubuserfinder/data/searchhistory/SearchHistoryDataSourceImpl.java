@@ -62,15 +62,13 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
                 SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY
         };
 
-        Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
-                null, null, null);
+        Cursor cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null, null, null, null);
 
         List<SearchHistoryItem> searchHistory = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             int searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(SearchHistoryEntry._ID));
-            String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
-                    SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
+            String searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY));
 
             SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
             searchHistoryItem.setId(searchHistoryItemId);
@@ -91,7 +89,6 @@ public class SearchHistoryDataSourceImpl implements SearchHistoryDataSource {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.getQuery());
 
-        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
-                CONFLICT_REPLACE);
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues, CONFLICT_REPLACE);
     }
 }

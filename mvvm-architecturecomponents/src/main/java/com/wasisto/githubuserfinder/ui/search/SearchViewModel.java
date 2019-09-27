@@ -75,31 +75,30 @@ public class SearchViewModel extends ViewModel {
 
         getHistoryResult.addSource(
                 getHistoryUseCase.executeAsync(null),
-                resource -> {
-                    if (resource.status == ERROR) {
-                        loggingHelper.error(TAG, "An error occurred while getting the search user history",
-                                resource.error);
+                result -> {
+                    if (result.status == ERROR) {
+                        loggingHelper.error(TAG, "An error occurred while getting the search user history", result.error);
                     }
 
-                    getHistoryResult.setValue(resource);
+                    getHistoryResult.setValue(result);
                 }
         );
 
         result = Transformations.map(
                 searchUserResult,
-                resource -> resource.data
+                result -> result.data
         );
 
         history = Transformations.map(
                 getHistoryResult,
-                resource -> resource.data
+                result -> result.data
         );
 
         shouldShowNoResultsText = Transformations.map(
                 searchUserResult,
-                resource -> {
-                    if (resource.status == SUCCESS) {
-                        return resource.data.getTotalCount() == 0;
+                result -> {
+                    if (result.status == SUCCESS) {
+                        return result.data.getTotalCount() == 0;
                     } else {
                         return false;
                     }
@@ -108,30 +107,30 @@ public class SearchViewModel extends ViewModel {
 
         shouldShowResult = Transformations.map(
                 searchUserResult,
-                resource -> resource.status == SUCCESS
+                result -> result.status == SUCCESS
         );
 
         shouldShowHistory.setValue(true);
 
         shouldShowHistory.addSource(
                 searchUserResult,
-                resource -> shouldShowHistory.setValue(false)
+                result -> shouldShowHistory.setValue(false)
         );
 
         isLoading.addSource(
                 searchUserResult,
-                resource -> isLoading.setValue(resource.status == LOADING)
+                result -> isLoading.setValue(result.status == LOADING)
         );
 
         isLoading.addSource(
                 getHistoryResult,
-                resource -> isLoading.setValue(resource.status == LOADING)
+                result -> isLoading.setValue(result.status == LOADING)
         );
 
         showToastEvent.addSource(
                 searchUserResult,
-                resource -> {
-                    if (resource.status == ERROR) {
+                result -> {
+                    if (result.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -139,8 +138,8 @@ public class SearchViewModel extends ViewModel {
 
         showToastEvent.addSource(
                 getHistoryResult,
-                resource -> {
-                    if (resource.status == ERROR) {
+                result -> {
+                    if (result.status == ERROR) {
                         showToastEvent.setValue(new Event<>(R.string.an_error_occurred));
                     }
                 }
@@ -155,13 +154,12 @@ public class SearchViewModel extends ViewModel {
             } else {
                 searchUserResult.addSource(
                         searchUseCase.executeAsync(q),
-                        resource -> {
-                            if (resource.status == ERROR) {
-                                loggingHelper.error(TAG, "An error occurred while searching users",
-                                        resource.error);
+                        result -> {
+                            if (result.status == ERROR) {
+                                loggingHelper.error(TAG, "An error occurred while searching users", result.error);
                             }
 
-                            searchUserResult.setValue(resource);
+                            searchUserResult.setValue(result);
                         }
                 );
             }

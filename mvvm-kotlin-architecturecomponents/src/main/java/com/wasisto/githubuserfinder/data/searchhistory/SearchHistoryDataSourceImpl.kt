@@ -51,22 +51,15 @@ class SearchHistoryDataSourceImpl private constructor(context: Context) : Search
 
         val projection = arrayOf(BaseColumns._ID, SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY)
 
-        val cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null,
-            null, null, null)
+        val cursor = db.query(SearchHistoryEntry.TABLE_NAME, projection, null, null, null, null, null)
 
         val searchHistory = mutableListOf<SearchHistoryItem>()
 
         while (cursor.moveToNext()) {
             val searchHistoryItemId = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-            val searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(
-                SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY))
+            val searchHistoryItemQuery = cursor.getString(cursor.getColumnIndexOrThrow(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY))
 
-            searchHistory.add(
-                SearchHistoryItem(
-                    searchHistoryItemId,
-                    searchHistoryItemQuery
-                )
-            )
+            searchHistory.add(SearchHistoryItem(searchHistoryItemId, searchHistoryItemQuery))
         }
 
         cursor.close()
@@ -80,7 +73,6 @@ class SearchHistoryDataSourceImpl private constructor(context: Context) : Search
         val contentValues = ContentValues()
         contentValues.put(SearchHistoryEntry.COLUMN_NAME_SEARCH_QUERY, searchHistoryItem.query)
 
-        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues,
-            CONFLICT_REPLACE)
+        db.insertWithOnConflict(SearchHistoryEntry.TABLE_NAME, null, contentValues, CONFLICT_REPLACE)
     }
 }

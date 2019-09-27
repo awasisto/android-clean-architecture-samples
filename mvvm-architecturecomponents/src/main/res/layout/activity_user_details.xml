@@ -48,7 +48,7 @@
                     android:layout_height="136dp"
                     android:layout_marginBottom="16dp"
                     imageUrl="@{viewModel.user.avatarUrl}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="24sp"
                     android:text="@{viewModel.user.name}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
                     android:fontFamily="sans-serif-light"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.login}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.company}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                     android:textColor="?android:attr/textColorPrimary"
                     android:textSize="16sp"
                     android:text="@{viewModel.user.location}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
                     android:textSize="16sp"
                     android:text="@{viewModel.user.blog}"
                     android:onClick="@{() -> viewModel.onBlogClick()}"
-                    goneUnless="@{viewModel.isShouldShowUser}" />
+                    goneUnless="@{viewModel.shouldShowUserDetails}" />
             </LinearLayout>
         </ScrollView>
 

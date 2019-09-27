@@ -44,7 +44,7 @@ public class UserDetailsViewModel extends ViewModel {
 
     private LiveData<User> user;
 
-    private LiveData<Boolean> isShouldShowUser;
+    private LiveData<Boolean> shouldShowUserDetails;
 
     private MutableLiveData<Event<String>> openBrowserEvent = new MutableLiveData<>();
 
@@ -74,7 +74,7 @@ public class UserDetailsViewModel extends ViewModel {
                 resource -> resource.data
         );
 
-        isShouldShowUser = Transformations.map(
+        shouldShowUserDetails = Transformations.map(
                 getUserResult,
                 resource -> resource.status == SUCCESS
         );
@@ -113,8 +113,8 @@ public class UserDetailsViewModel extends ViewModel {
         return user;
     }
 
-    public LiveData<Boolean> getIsShouldShowUser() {
-        return isShouldShowUser;
+    public LiveData<Boolean> getShouldShowUserDetails() {
+        return shouldShowUserDetails;
     }
 
     public MutableLiveData<Event<String>> getOpenBrowserEvent() {
