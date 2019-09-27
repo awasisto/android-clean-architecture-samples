@@ -8,11 +8,9 @@ Samples
 
 | Sample                                                                   | Description                                                                                                                                             |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [mvp](mvp)                                                               | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                                                                 |
-| [mvp-kotlin](mvp-kotlin)                                                 | A clean Model-View-Presenter (MVP) architecture sample written in Kotlin.                                                                               |
-| [mvp-dagger-rxjava](mvp-dagger-rxjava)                                   | A clean Model-View-Presenter (MVP) architecture sample written in Java. Uses Dagger 2 for dependency injection and RxJava 2.0 to implement concurrency. |
-| [mvvm-architecturecomponents](mvvm-architecturecomponents)               | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.                                          |
 | [mvvm-kotlin-architecturecomponents](mvvm-kotlin-architecturecomponents) | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. Uses Android Architecture Components.                                        |
+| [mvvm-architecturecomponents](mvvm-architecturecomponents)               | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.                                          |
+| [mvp](mvp)                                                               | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                                                                 |
 
 Sample app overview
 -------------------
