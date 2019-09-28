@@ -31,9 +31,25 @@ object ExecutorProviderImpl : ExecutorProvider {
 
     private val ioExecutor = Executors.newCachedThreadPool()
 
+    private val uiExecutor = object : AbstractExecutorService() {
+        private val handler: Handler = Handler(Looper.getMainLooper())
+        override fun execute(command: Runnable) {
+            if (handler.looper == Looper.myLooper()) {
+                command.run()
+            } else {
+                handler.post(command)
+            }
+        }
+        override fun shutdown() = throw UnsupportedOperationException()
+        override fun shutdownNow() = throw UnsupportedOperationException()
+        override fun isShutdown() = false
+        override fun isTerminated() = false
+        override fun awaitTermination(timeout: Long, timeUnit: TimeUnit) = throw UnsupportedOperationException()
+    }
+
     override fun computation(): ExecutorService = computationExecutor
 
     override fun io(): ExecutorService = ioExecutor
 
-    override fun ui() = UiExecutor
+    override fun ui(): ExecutorService = uiExecutor
 }
