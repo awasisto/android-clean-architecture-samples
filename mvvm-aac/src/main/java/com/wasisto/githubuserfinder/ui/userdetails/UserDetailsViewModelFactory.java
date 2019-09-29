@@ -20,4 +20,32 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvvm-aac', ':mvvm-kotlin-aac'
+package com.wasisto.githubuserfinder.ui.userdetails;
+
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.annotation.NonNull;
+import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
+
+public class UserDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+
+    private String username;
+
+    private GetUserUseCase getUserUseCase;
+
+    private LoggingHelper loggingHelper;
+
+    public UserDetailsViewModelFactory(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
+        this.username = username;
+        this.getUserUseCase = getUserUseCase;
+        this.loggingHelper = loggingHelper;
+    }
+
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        // noinspection unchecked
+        return (T) new UserDetailsViewModel(username, getUserUseCase, loggingHelper);
+    }
+}

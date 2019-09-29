@@ -20,4 +20,15 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvvm-aac', ':mvvm-kotlin-aac'
+package com.wasisto.githubuserfinder.data.searchhistory;
+
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+
+import java.util.List;
+
+public interface SearchHistoryDataSource {
+
+    List<SearchHistoryItem> getAll() throws Throwable;
+
+    void add(SearchHistoryItem searchHistoryItem) throws Throwable;
+}

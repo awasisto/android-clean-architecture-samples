@@ -20,4 +20,34 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvvm-aac', ':mvvm-kotlin-aac'
+package com.wasisto.githubuserfinder.ui.search;
+
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.annotation.NonNull;
+import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
+import com.wasisto.githubuserfinder.domain.SearchUseCase;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
+
+public class SearchViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+
+    private SearchUseCase searchUseCase;
+
+    private GetHistoryUseCase getHistoryUseCase;
+
+    private LoggingHelper loggingHelper;
+
+    public SearchViewModelFactory(SearchUseCase searchUseCase, GetHistoryUseCase getHistoryUseCase,
+                                  LoggingHelper loggingHelper) {
+        this.searchUseCase = searchUseCase;
+        this.getHistoryUseCase = getHistoryUseCase;
+        this.loggingHelper = loggingHelper;
+    }
+
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        // noinspection unchecked
+        return (T) new SearchViewModel(searchUseCase, getHistoryUseCase, loggingHelper);
+    }
+}

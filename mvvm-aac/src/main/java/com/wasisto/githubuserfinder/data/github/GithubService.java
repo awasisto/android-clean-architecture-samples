@@ -20,4 +20,20 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvvm-aac', ':mvvm-kotlin-aac'
+package com.wasisto.githubuserfinder.data.github;
+
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.model.User;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+public interface GithubService {
+
+    @GET("search/users")
+    Call<SearchUserResult> searchUser(@Query("q") String query);
+
+    @GET("users/{username}")
+    Call<User> getUser(@Path("username") String username);
+}

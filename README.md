@@ -6,11 +6,11 @@ A project providing demonstrations on how to architect an Android app using Uncl
 Samples
 -------
 
-| Sample                                                                   | Description                                                                                                                                             |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [mvvm-kotlin-architecturecomponents](mvvm-kotlin-architecturecomponents) | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. Uses Android Architecture Components.                                        |
-| [mvvm-architecturecomponents](mvvm-architecturecomponents)               | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.                                          |
-| [mvp](mvp)                                                               | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                                                                 |
+| Sample                             | Description                                                                                                      |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [mvvm-aac](mvvm-aac)               | A clean Model-View-ViewModel (MVVM) architecture sample written in Java. Uses Android Architecture Components.   |
+| [mvvm-kotlin-aac](mvvm-kotlin-aac) | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. Uses Android Architecture Components. |
+| [mvp](mvp)                         | A clean Model-View-Presenter (MVP) architecture sample written in Java.                                          |
 
 Sample app overview
 -------------------

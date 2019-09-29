@@ -20,4 +20,19 @@
  * SOFTWARE.
  */
 
-include ':mvp', ':mvvm-aac', ':mvvm-kotlin-aac'
+package com.wasisto.githubuserfinder.data.searchhistory;
+
+import android.provider.BaseColumns;
+
+public class SearchHistoryContract {
+
+    private SearchHistoryContract() {
+    }
+
+    public static class SearchHistoryEntry implements BaseColumns {
+
+        public static final String TABLE_NAME = "search_history";
+
+        public static final String COLUMN_NAME_SEARCH_QUERY = "search_query";
+    }
+}
