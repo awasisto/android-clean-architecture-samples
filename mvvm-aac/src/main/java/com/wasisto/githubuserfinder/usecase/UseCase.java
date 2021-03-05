@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain;
+package com.wasisto.githubuserfinder.usecase;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

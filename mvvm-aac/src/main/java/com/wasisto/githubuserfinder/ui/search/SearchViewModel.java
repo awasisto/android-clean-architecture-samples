@@ -24,11 +24,11 @@ package com.wasisto.githubuserfinder.ui.search;
 
 import androidx.lifecycle.*;
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.domain.UseCase;
+import com.wasisto.githubuserfinder.usecase.UseCase;
 import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
-import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
-import com.wasisto.githubuserfinder.domain.SearchUseCase;
+import com.wasisto.githubuserfinder.usecase.GetHistoryUseCase;
+import com.wasisto.githubuserfinder.usecase.SearchUseCase;
 import com.wasisto.githubuserfinder.ui.Event;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 

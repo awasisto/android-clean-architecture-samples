@@ -20,12 +20,12 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain;
+package com.wasisto.githubuserfinder.usecase;
 
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
-import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 

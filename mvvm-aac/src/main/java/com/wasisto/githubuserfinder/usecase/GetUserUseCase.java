@@ -20,35 +20,23 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain;
+package com.wasisto.githubuserfinder.usecase;
 
+import com.wasisto.githubuserfinder.data.github.GithubDataSource;
+import com.wasisto.githubuserfinder.model.User;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-public abstract class UseCase<P, R> {
+public class GetUserUseCase extends UseCase<String, User> {
 
-    private ExecutorProvider executorProvider;
+    private GithubDataSource githubDataSource;
 
-    public UseCase(ExecutorProvider executorProvider) {
-        this.executorProvider = executorProvider;
+    public GetUserUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource) {
+        super(executorProvider);
+        this.githubDataSource = githubDataSource;
     }
 
-    public void executeAsync(P params, Callback<R> callback) {
-        executorProvider.io().submit(() -> {
-            try {
-                R result = execute(params);
-                executorProvider.ui().submit(() -> callback.onSuccess(result));
-            } catch (Throwable error) {
-                executorProvider.ui().submit(() -> callback.onError(error));
-            }
-        });
-    }
-
-    abstract R execute(P params) throws Throwable;
-
-    public interface Callback<T> {
-
-        void onSuccess(T result);
-
-        void onError(Throwable error);
+    @Override
+    public User execute(String username) throws Throwable {
+        return githubDataSource.getUser(username);
     }
 }

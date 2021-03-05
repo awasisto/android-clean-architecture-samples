@@ -20,32 +20,16 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.ui.userdetails;
+package com.wasisto.githubuserfinder.usecase
 
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.annotation.NonNull;
-import com.wasisto.githubuserfinder.usecase.GetUserUseCase;
-import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
+import com.wasisto.githubuserfinder.data.github.GithubDataSource
+import com.wasisto.githubuserfinder.model.User
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider
 
-public class UserDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+class GetUserUseCase(
+    executorProvider: ExecutorProvider,
+    private val githubDataSource: GithubDataSource
+) : UseCase<String, User>(executorProvider) {
 
-    private String username;
-
-    private GetUserUseCase getUserUseCase;
-
-    private LoggingHelper loggingHelper;
-
-    public UserDetailsViewModelFactory(String username, GetUserUseCase getUserUseCase, LoggingHelper loggingHelper) {
-        this.username = username;
-        this.getUserUseCase = getUserUseCase;
-        this.loggingHelper = loggingHelper;
-    }
-
-    @NonNull
-    @Override
-    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        // noinspection unchecked
-        return (T) new UserDetailsViewModel(username, getUserUseCase, loggingHelper);
-    }
+    override fun execute(params: String) = githubDataSource.getUser(username = params)
 }

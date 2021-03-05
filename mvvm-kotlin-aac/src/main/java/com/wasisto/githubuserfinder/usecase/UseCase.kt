@@ -20,16 +20,32 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain
+package com.wasisto.githubuserfinder.usecase
 
-import com.wasisto.githubuserfinder.data.github.GithubDataSource
-import com.wasisto.githubuserfinder.model.User
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.wasisto.githubuserfinder.util.executor.ExecutorProvider
 
-class GetUserUseCase(
-    executorProvider: ExecutorProvider,
-    private val githubDataSource: GithubDataSource
-) : UseCase<String, User>(executorProvider) {
+abstract class UseCase<in P, R> constructor(private val executorProvider: ExecutorProvider) {
 
-    override fun execute(params: String) = githubDataSource.getUser(username = params)
+    fun executeAsync(params: P): LiveData<Result<R>> {
+        val result = MutableLiveData<Result<R>>()
+        result.value = Result.Loading
+        executorProvider.io().submit {
+            try {
+                result.postValue(Result.Success(execute(params)))
+            } catch (error: Throwable) {
+                result.postValue(Result.Error(error))
+            }
+        }
+        return result
+    }
+
+    abstract fun execute(params: P): R
+
+    sealed class Result<out T> {
+        class Success<out T>(val data: T) : Result<T>()
+        class Error(val error: Throwable) : Result<Nothing>()
+        object Loading : Result<Nothing>()
+    }
 }

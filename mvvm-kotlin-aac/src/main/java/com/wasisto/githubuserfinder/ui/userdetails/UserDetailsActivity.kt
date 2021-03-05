@@ -33,7 +33,7 @@ import com.wasisto.githubuserfinder.R
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl
 import com.wasisto.githubuserfinder.databinding.ActivityUserDetailsBinding
 
-import com.wasisto.githubuserfinder.domain.GetUserUseCase
+import com.wasisto.githubuserfinder.usecase.GetUserUseCase
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl
 

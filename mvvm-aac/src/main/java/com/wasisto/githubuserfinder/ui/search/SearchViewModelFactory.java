@@ -25,8 +25,8 @@ package com.wasisto.githubuserfinder.ui.search;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
-import com.wasisto.githubuserfinder.domain.GetHistoryUseCase;
-import com.wasisto.githubuserfinder.domain.SearchUseCase;
+import com.wasisto.githubuserfinder.usecase.GetHistoryUseCase;
+import com.wasisto.githubuserfinder.usecase.SearchUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 public class SearchViewModelFactory extends ViewModelProvider.NewInstanceFactory {

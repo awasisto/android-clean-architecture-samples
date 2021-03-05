@@ -23,9 +23,9 @@
 package com.wasisto.githubuserfinder.ui.userdetails;
 
 import com.wasisto.githubuserfinder.R;
-import com.wasisto.githubuserfinder.domain.UseCase;
+import com.wasisto.githubuserfinder.usecase.UseCase;
 import com.wasisto.githubuserfinder.model.User;
-import com.wasisto.githubuserfinder.domain.GetUserUseCase;
+import com.wasisto.githubuserfinder.usecase.GetUserUseCase;
 import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
 public class UserDetailsPresenterImpl implements UserDetailsPresenter {

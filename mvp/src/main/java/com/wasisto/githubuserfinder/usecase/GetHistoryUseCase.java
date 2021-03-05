@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain;
+package com.wasisto.githubuserfinder.usecase;
 
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
 import com.wasisto.githubuserfinder.model.SearchHistoryItem;

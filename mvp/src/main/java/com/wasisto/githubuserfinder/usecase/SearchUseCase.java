@@ -20,23 +20,46 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain;
+package com.wasisto.githubuserfinder.usecase;
 
 import com.wasisto.githubuserfinder.data.github.GithubDataSource;
-import com.wasisto.githubuserfinder.model.User;
+import com.wasisto.githubuserfinder.model.SearchUserResult;
+import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource;
+import com.wasisto.githubuserfinder.model.SearchHistoryItem;
 import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
+import com.wasisto.githubuserfinder.util.logging.LoggingHelper;
 
-public class GetUserUseCase extends UseCase<String, User> {
+public class SearchUseCase extends UseCase<String, SearchUserResult> {
+
+    private static final String TAG = "SearchUseCase";
 
     private GithubDataSource githubDataSource;
 
-    public GetUserUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource) {
+    private SearchHistoryDataSource searchHistoryDataSource;
+
+    private LoggingHelper loggingHelper;
+
+    public SearchUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource,
+                         SearchHistoryDataSource searchHistoryDataSource,
+                         LoggingHelper loggingHelper) {
         super(executorProvider);
         this.githubDataSource = githubDataSource;
+        this.searchHistoryDataSource = searchHistoryDataSource;
+        this.loggingHelper = loggingHelper;
     }
 
     @Override
-    public User execute(String username) throws Throwable {
-        return githubDataSource.getUser(username);
+    public SearchUserResult execute(String query) throws Throwable {
+        SearchHistoryItem searchHistoryItem = new SearchHistoryItem();
+        searchHistoryItem.setQuery(query);
+
+        try {
+            searchHistoryDataSource.add(searchHistoryItem);
+            loggingHelper.debug(TAG, "Query added to the search history");
+        } catch (Throwable error) {
+            loggingHelper.warn(TAG, "An error occurred while adding a query to the search history", error);
+        }
+
+        return githubDataSource.searchUser(query);
     }
 }

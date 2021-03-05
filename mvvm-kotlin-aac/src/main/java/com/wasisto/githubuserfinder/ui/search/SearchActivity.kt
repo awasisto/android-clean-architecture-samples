@@ -35,8 +35,8 @@ import com.wasisto.githubuserfinder.ui.userdetails.UserDetailsActivity
 import androidx.lifecycle.Observer
 import com.wasisto.githubuserfinder.data.github.GithubDataSourceImpl
 import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSourceImpl
-import com.wasisto.githubuserfinder.domain.GetHistoryUseCase
-import com.wasisto.githubuserfinder.domain.SearchUseCase
+import com.wasisto.githubuserfinder.usecase.GetHistoryUseCase
+import com.wasisto.githubuserfinder.usecase.SearchUseCase
 import com.wasisto.githubuserfinder.util.executor.ExecutorProviderImpl
 import com.wasisto.githubuserfinder.util.logging.LoggingHelperImpl
 

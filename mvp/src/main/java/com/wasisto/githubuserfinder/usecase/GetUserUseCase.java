@@ -20,16 +20,23 @@
  * SOFTWARE.
  */
 
-package com.wasisto.githubuserfinder.domain
+package com.wasisto.githubuserfinder.usecase;
 
-import com.wasisto.githubuserfinder.data.searchhistory.SearchHistoryDataSource
-import com.wasisto.githubuserfinder.model.SearchHistoryItem
-import com.wasisto.githubuserfinder.util.executor.ExecutorProvider
+import com.wasisto.githubuserfinder.data.github.GithubDataSource;
+import com.wasisto.githubuserfinder.model.User;
+import com.wasisto.githubuserfinder.util.executor.ExecutorProvider;
 
-class GetHistoryUseCase(
-    executorProvider: ExecutorProvider,
-    private val searchHistoryDataSource: SearchHistoryDataSource
-) : UseCase<Unit, List<SearchHistoryItem>>(executorProvider) {
+public class GetUserUseCase extends UseCase<String, User> {
 
-    override fun execute(params: Unit) = searchHistoryDataSource.getAll()
+    private GithubDataSource githubDataSource;
+
+    public GetUserUseCase(ExecutorProvider executorProvider, GithubDataSource githubDataSource) {
+        super(executorProvider);
+        this.githubDataSource = githubDataSource;
+    }
+
+    @Override
+    public User execute(String username) throws Throwable {
+        return githubDataSource.getUser(username);
+    }
 }
