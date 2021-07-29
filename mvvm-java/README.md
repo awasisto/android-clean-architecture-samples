@@ -1,15 +1,7 @@
-Android Clean Architecture Samples
-==================================
+mvvm-java
+=========
 
-A project providing demonstrations on how to architect an Android app using Uncle Bob's Clean Architecture approach.
-
-Samples
--------
-
-| Sample                             | Description                                                                |
-| ---------------------------------- | -------------------------------------------------------------------------- |
-| [mvvm-kotlin](mvvm-kotlin)         | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. |
-| [mvvm-java](mvvm-java)             | A clean Model-View-ViewModel (MVVM) architecture sample written in Java.   |
+A clean Model-View-ViewModel (MVVM) architecture sample written in Java.
 
 Sample app overview
 -------------------
@@ -22,10 +14,10 @@ A simple app for searching GitHub users with a search history feature.
 ![Screenshot 2](https://user-images.githubusercontent.com/9427397/127523698-dc4f4ff8-4818-41a8-96c5-a61025e1e26e.png)
 ![Screenshot 3](https://user-images.githubusercontent.com/9427397/127523699-e638fad5-00fb-47a2-8100-20ca1091f4e4.png)
 
-General architecture
---------------------
+Architecture
+------------
 
-![General architecture](https://user-images.githubusercontent.com/9427397/127543064-b2f7e3bf-6221-48ba-afab-ec3e9098db61.png)
+![Architecture](https://user-images.githubusercontent.com/9427397/127538970-b366c3c1-e7d8-46dd-92f1-811b5467fae4.png)
 
 License
 -------

@@ -1,0 +1,5 @@
+rootProject.name = "GitHub User Finder"
+include ':common'
+include ':domain'
+include ':data'
+include ':ui'
