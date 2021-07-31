@@ -3,17 +3,6 @@ mvvm-java
 
 A clean Model-View-ViewModel (MVVM) architecture sample written in Java.
 
-Sample app overview
--------------------
-
-A simple app for searching GitHub users with a search history feature.
-
-#### Screenshots
-
-![Screenshot 1](https://user-images.githubusercontent.com/9427397/127523694-8ac6dd5e-a739-48ca-b249-40474af9f740.png)
-![Screenshot 2](https://user-images.githubusercontent.com/9427397/127523698-dc4f4ff8-4818-41a8-96c5-a61025e1e26e.png)
-![Screenshot 3](https://user-images.githubusercontent.com/9427397/127523699-e638fad5-00fb-47a2-8100-20ca1091f4e4.png)
-
 Architecture
 ------------
 
