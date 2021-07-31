@@ -8,8 +8,9 @@ Samples
 
 | Sample                             | Description                                                                |
 | ---------------------------------- | -------------------------------------------------------------------------- |
-| [mvvm-kotlin](mvvm-kotlin)         | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. |
+| [mvp-java](mvp-java)               | A clean Model-View-Presenter (MVP) architecture sample written in Java.    |
 | [mvvm-java](mvvm-java)             | A clean Model-View-ViewModel (MVVM) architecture sample written in Java.   |
+| [mvvm-kotlin](mvvm-kotlin)         | A clean Model-View-ViewModel (MVVM) architecture sample written in Kotlin. |
 
 Sample app overview
 -------------------
