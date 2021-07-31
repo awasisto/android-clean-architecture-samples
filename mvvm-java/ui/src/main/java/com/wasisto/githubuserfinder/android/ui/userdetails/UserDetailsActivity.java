@@ -23,39 +23,41 @@ public class UserDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         String username = getIntent().getStringExtra(EXTRA_USERNAME);
+
         if (username == null) {
             finish();
-        } else {
-            ViewModelFactory viewModelFactory = new ViewModelFactory(DefaultServiceLocator.getInstance(getApplication()));
-            viewModel = viewModelFactory.create(UserDetailsViewModel.class);
-
-            ActivityUserDetailsBinding binding = ActivityUserDetailsBinding.inflate(getLayoutInflater());
-            binding.setViewModel(viewModel);
-            binding.setLifecycleOwner(this);
-            setContentView(binding.getRoot());
-
-            viewModel.getOpenBrowserEvent().observe(this, event -> {
-                String url = event.getContentIfNotHandled();
-                if (url != null) {
-                    startActivity(
-                            new Intent(Intent.ACTION_VIEW) {{
-                                setData(url.matches("(http|https)://") ? Uri.parse(url) : Uri.parse("http://" + url));
-                            }}
-                    );
-                }
-            });
-
-            viewModel.getShowErrorToastEvent().observe(this, event -> {
-                if (!event.hasBeenHandled()) {
-                    Toast.makeText(this, R.string.an_error_occurred, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            viewModel.getCloseActivityEvent().observe(this, event -> {
-                finish();
-            });
-
-            viewModel.load(username);
+            return;
         }
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory(DefaultServiceLocator.getInstance(getApplication()));
+        viewModel = viewModelFactory.create(UserDetailsViewModel.class);
+
+        ActivityUserDetailsBinding binding = ActivityUserDetailsBinding.inflate(getLayoutInflater());
+        binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
+        setContentView(binding.getRoot());
+
+        viewModel.getOpenBrowserEvent().observe(this, event -> {
+            String url = event.getContentIfNotHandled();
+            if (url != null) {
+                startActivity(
+                        new Intent(Intent.ACTION_VIEW) {{
+                            setData(url.matches("(http|https)://") ? Uri.parse(url) : Uri.parse("http://" + url));
+                        }}
+                );
+            }
+        });
+
+        viewModel.getShowErrorToastEvent().observe(this, event -> {
+            if (!event.hasBeenHandled()) {
+                Toast.makeText(this, R.string.an_error_occurred, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getCloseActivityEvent().observe(this, event -> {
+            finish();
+        });
+
+        viewModel.load(username);
     }
 }

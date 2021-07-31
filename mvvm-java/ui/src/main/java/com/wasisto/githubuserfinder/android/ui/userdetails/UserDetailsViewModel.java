@@ -68,11 +68,11 @@ public class UserDetailsViewModel extends ViewModel {
     }
 
     public void onBlogClick() {
-        if (user.getValue() != null && user.getValue().getBlog() != null) {
-            mainExecutorService.execute(() -> {
-                openBrowserEvent.setValue(new Event<>(null));
-            });
-        }
+        mainExecutorService.execute(() -> {
+            if (user.getValue() != null && user.getValue().getBlog() != null) {
+                    openBrowserEvent.setValue(new Event<>(null));
+            }
+        });
     }
 
     public LiveData<User> getUser() {

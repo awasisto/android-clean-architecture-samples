@@ -18,9 +18,9 @@ import java.util.concurrent.ExecutorService;
 
 public class SearchViewModel extends ViewModel {
 
-    private GetSearchHistoryUseCase getSearchHistoryUseCase;
-
     private SearchUsersUseCase searchUsersUseCase;
+
+    private GetSearchHistoryUseCase getSearchHistoryUseCase;
 
     private Logger logger;
 
