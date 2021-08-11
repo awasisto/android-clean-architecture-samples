@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.wasisto.githubuserfinder.android.R;
 import com.wasisto.githubuserfinder.domain.models.SearchUsersResult;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
@@ -29,12 +30,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         }
     }
 
-    private List<SearchUsersResult.Item> data;
+    private List<SearchUsersResult.Item> data = Collections.emptyList();
 
     private SearchPresenter presenter;
 
-    public SearchResultAdapter(List<SearchUsersResult.Item> data, SearchPresenter presenter) {
-        this.data = data;
+    public SearchResultAdapter(SearchPresenter presenter) {
         this.presenter = presenter;
     }
 

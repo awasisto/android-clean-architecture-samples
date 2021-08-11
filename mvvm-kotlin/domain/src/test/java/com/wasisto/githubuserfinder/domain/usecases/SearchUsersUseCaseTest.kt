@@ -1,6 +1,6 @@
 package com.wasisto.githubuserfinder.domain.usecases
 
-import com.wasisto.githubuserfinder.common.Logger
+import com.wasisto.githubuserfinder.domain.NoOpLogger
 import com.wasisto.githubuserfinder.domain.interfaces.GithubDataSource
 import com.wasisto.githubuserfinder.domain.interfaces.SearchHistoryDataSource
 import com.wasisto.githubuserfinder.domain.models.SearchHistoryItem
@@ -22,13 +22,10 @@ class SearchUsersUseCaseTest {
     @MockK
     private lateinit var searchHistoryDataSource: SearchHistoryDataSource
 
-    @MockK
-    private lateinit var logger: Logger
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        searchUsersUseCase = SearchUsersUseCase(githubDataSource, searchHistoryDataSource, logger)
+        searchUsersUseCase = SearchUsersUseCase(githubDataSource, searchHistoryDataSource, NoOpLogger)
     }
 
     @Test
@@ -44,12 +41,8 @@ class SearchUsersUseCaseTest {
 
         every { githubDataSource.searchUsers(query) }.returns(searchResult)
 
-        val searchHistoryItemSlot = slot<SearchHistoryItem>()
-
-        every { searchHistoryDataSource.add(capture(searchHistoryItemSlot)) }
-
         assertEquals(searchResult, searchUsersUseCase(query))
-        assertEquals(query, searchHistoryItemSlot.captured.query)
+        verify { searchHistoryDataSource.add(SearchHistoryItem(query = query)) }
     }
 
     @Test
@@ -70,6 +63,6 @@ class SearchUsersUseCaseTest {
         every { searchHistoryDataSource.add(capture(searchHistoryItemSlot)) }.throws(Exception())
 
         assertEquals(searchResult, searchUsersUseCase(query))
-        assertEquals(query, searchHistoryItemSlot.captured.query)
+        verify { searchHistoryDataSource.add(SearchHistoryItem(query = query)) }
     }
 }

@@ -30,7 +30,7 @@ class UserDetailsViewModel(
     fun load(username: String) = viewModelScope.launch(mainDispatcher) {
         shouldShowLoadingIndicator.value = true
 
-        viewModelScope.launch(ioDispatcher) {
+        launch(ioDispatcher) {
             try {
                 val retrievedUser = getUserUseCase(username)
 

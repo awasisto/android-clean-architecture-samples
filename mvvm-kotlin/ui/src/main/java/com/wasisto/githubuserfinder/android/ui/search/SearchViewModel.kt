@@ -39,7 +39,7 @@ class SearchViewModel(
     fun load() = viewModelScope.launch(mainDispatcher) {
         shouldShowLoadingIndicator.value = true
 
-        viewModelScope.launch(ioDispatcher) {
+        launch(ioDispatcher) {
             try {
                 val history = getSearchHistoryUseCase()
 

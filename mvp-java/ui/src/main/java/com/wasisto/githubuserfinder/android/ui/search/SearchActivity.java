@@ -21,7 +21,6 @@ import com.wasisto.githubuserfinder.domain.models.SearchUsersResult;
 import com.wasisto.githubuserfinder.domain.usecases.GetSearchHistoryUseCase;
 import com.wasisto.githubuserfinder.domain.usecases.SearchUsersUseCase;
 
-import java.util.Collections;
 import java.util.List;
 
 public class SearchActivity extends AppCompatActivity implements SearchView {
@@ -34,15 +33,15 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     private Button searchButton;
 
-    private RecyclerView resultRecyclerView;
+    private RecyclerView searchResultRecyclerView;
 
-    private RecyclerView historyRecyclerView;
+    private RecyclerView searchHistoryRecyclerView;
 
     private TextView noResultsTextView;
 
-    private SearchResultAdapter resultAdapter;
+    private SearchResultAdapter searchResultAdapter;
 
-    private SearchHistoryAdapter historyAdapter;
+    private SearchHistoryAdapter searchHistoryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,15 +68,15 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
         loadingIndicator = findViewById(R.id.loadingIndicator);
         queryEditText = findViewById(R.id.queryEditText);
         searchButton = findViewById(R.id.searchButton);
-        resultRecyclerView = findViewById(R.id.searchResultRecyclerView);
-        historyRecyclerView = findViewById(R.id.searchHistoryRecyclerView);
+        searchResultRecyclerView = findViewById(R.id.searchResultRecyclerView);
+        searchHistoryRecyclerView = findViewById(R.id.searchHistoryRecyclerView);
         noResultsTextView = findViewById(R.id.noResultsTextView);
 
-        resultAdapter = new SearchResultAdapter(Collections.emptyList(), presenter);
-        resultRecyclerView.setAdapter(resultAdapter);
+        searchResultAdapter = new SearchResultAdapter(presenter);
+        searchResultRecyclerView.setAdapter(searchResultAdapter);
 
-        historyAdapter = new SearchHistoryAdapter(Collections.emptyList(), presenter);
-        historyRecyclerView.setAdapter(historyAdapter);
+        searchHistoryAdapter = new SearchHistoryAdapter(presenter);
+        searchHistoryRecyclerView.setAdapter(searchHistoryAdapter);
 
         searchButton.setOnClickListener(v -> presenter.search(queryEditText.getText().toString()));
 
@@ -101,23 +100,23 @@ public class SearchActivity extends AppCompatActivity implements SearchView {
 
     @Override
     public void showSearchResult(List<SearchUsersResult.Item> searchResult) {
-        resultRecyclerView.setVisibility(View.VISIBLE);
+        searchResultRecyclerView.setVisibility(View.VISIBLE);
 
-        resultAdapter.setData(searchResult);
-        resultAdapter.notifyDataSetChanged();
+        searchResultAdapter.setData(searchResult);
+        searchResultAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showSearchHistory(List<SearchHistoryItem> searchHistory) {
-        historyRecyclerView.setVisibility(View.VISIBLE);
+        searchHistoryRecyclerView.setVisibility(View.VISIBLE);
 
-        historyAdapter.setData(searchHistory);
-        historyAdapter.notifyDataSetChanged();
+        searchHistoryAdapter.setData(searchHistory);
+        searchHistoryAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void hideSearchHistory() {
-        historyRecyclerView.setVisibility(View.GONE);
+        searchHistoryRecyclerView.setVisibility(View.GONE);
     }
 
     @Override

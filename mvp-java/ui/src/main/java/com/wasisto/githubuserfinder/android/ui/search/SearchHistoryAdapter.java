@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wasisto.githubuserfinder.android.R;
 import com.wasisto.githubuserfinder.domain.models.SearchHistoryItem;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.ViewHolder> {
@@ -24,12 +25,11 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         }
     }
 
-    private List<SearchHistoryItem> data;
+    private List<SearchHistoryItem> data = Collections.emptyList();
 
     private SearchPresenter presenter;
 
-    public SearchHistoryAdapter(List<SearchHistoryItem> data, SearchPresenter presenter) {
-        this.data = data;
+    public SearchHistoryAdapter(SearchPresenter presenter) {
         this.presenter = presenter;
     }
 

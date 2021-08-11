@@ -28,8 +28,6 @@ class SearchViewModelTest {
     @MockK
     private lateinit var getSearchHistoryUseCase: GetSearchHistoryUseCase
 
-    private val noOpLogger = NoOpLogger()
-
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
@@ -42,7 +40,7 @@ class SearchViewModelTest {
         searchViewModel = SearchViewModel(
             searchUsersUseCase,
             getSearchHistoryUseCase,
-            noOpLogger,
+            NoOpLogger,
             mainCoroutineRule.dispatcher,
             mainCoroutineRule.dispatcher
         )

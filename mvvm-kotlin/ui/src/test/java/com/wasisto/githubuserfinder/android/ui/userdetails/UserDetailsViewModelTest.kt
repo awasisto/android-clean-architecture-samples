@@ -22,8 +22,6 @@ class UserDetailsViewModelTest {
     @MockK
     private lateinit var getUserUseCase: GetUserUseCase
 
-    private val noOpLogger = NoOpLogger()
-
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
@@ -35,7 +33,7 @@ class UserDetailsViewModelTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         userDetailsViewModel = UserDetailsViewModel(
             getUserUseCase,
-            noOpLogger,
+            NoOpLogger,
             mainCoroutineRule.dispatcher,
             mainCoroutineRule.dispatcher
         )

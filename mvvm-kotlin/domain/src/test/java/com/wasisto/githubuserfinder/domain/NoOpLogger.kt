@@ -2,7 +2,7 @@ package com.wasisto.githubuserfinder.domain
 
 import com.wasisto.githubuserfinder.common.Logger
 
-class NoOpLogger : Logger {
+object NoOpLogger : Logger {
 
     override fun trace(message: String) {}
 
