@@ -6,7 +6,7 @@ A clean Model-View-Presenter (MVP) architecture sample written in Java.
 Architecture
 ------------
 
-![Architecture](https://user-images.githubusercontent.com/9427397/127731186-41d432a0-e7fe-4972-b9b8-63199aeacd54.png)
+![Architecture](https://user-images.githubusercontent.com/9427397/128656244-d8300136-3816-47d0-b37c-0ea4025bd499.png)
 
 License
 -------
